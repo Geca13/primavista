@@ -1,9 +1,13 @@
 package com.example.primavista.documents.controller;
 
+import java.io.IOException;
+import java.util.Base64;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.primavista.documents.entity.Company;
 import com.example.primavista.documents.entity.Invoice;
 import com.example.primavista.documents.entity.InvoiceSlip;
+import com.example.primavista.documents.entity.Type;
 import com.example.primavista.documents.repository.CompanyRepository;
+import com.example.primavista.documents.repository.InvoiceRepository;
 import com.example.primavista.documents.repository.InvoiceSlipRepository;
 import com.example.primavista.documents.services.DocumentsServices;
 
@@ -28,6 +34,9 @@ public class DocumentsController {
 	
 	@Autowired
 	InvoiceSlipRepository isRepository;
+	
+	@Autowired
+	InvoiceRepository invoiceRepository;
 
 	@GetMapping("/")
 	public String splashPage(Model model) {
@@ -92,10 +101,22 @@ public class DocumentsController {
 	
 	@GetMapping("/allunpaidSlips/{id}")
 	public String getAllByCompanyWithoutInvoice(Model model,@PathVariable("id") Integer id ) {
-		Company company = companyRepository.findById(id).get();
-		model.addAttribute("slips", isRepository.findByCompanyAndInvoice(company, null));
-		
+		Invoice invoice = invoiceRepository.findById(id).get();
+		model.addAttribute("slips", isRepository.findByCompanyAndInvoice(invoice.getCompany(), null));
+		model.addAttribute("invoice", invoice);
 		return "allSlips";
+	}
+	
+	@GetMapping("/addunpaidSlip/{id}/{sid}")
+	public String addSlipsToInvoice(@PathVariable("id") Integer id,@PathVariable("sid")  Integer sid) {
+		Invoice invoice = invoiceRepository.findById(id).get();
+		InvoiceSlip slip = isRepository.findById(sid).get();
+		invoice.getSlips().add(slip);
+		slip.setInvoice(invoice);
+		invoiceRepository.save(invoice);
+		isRepository.save(slip);
+		return "redirect:/allunpaidSlips/"+invoice.getId();
+		
 	}
 	
 	@GetMapping("/createInvoice/{id}")
@@ -105,20 +126,95 @@ public class DocumentsController {
 		model.addAttribute("company", company);
 		model.addAttribute("invoice", new Invoice());
 		model.addAttribute("file", file);
-		model.addAttribute("slipss", isRepository.findByCompanyAndInvoice(company, null));
+		
 		
 		return "newInvoice";
 		
 	}
 	
 	@PostMapping("/createInvoice/{id}")
-	public String createNewInvoice(@PathVariable("id") Integer id,MultipartFile file,@ModelAttribute("invoice")Invoice invoice, @Param("sid")Integer sid ) {
+	public String createNewInvoice(@PathVariable("id") Integer id,MultipartFile file,@ModelAttribute("invoice")Invoice invoice ) {
 		
-		docServices.createNewInvoice(invoice, file, id,sid);
+		Company company = companyRepository.findById(id).get();
+		Invoice newInvoice = new Invoice();
+		newInvoice.setSum(invoice.getSum());
+		newInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
+		newInvoice.setInvoiceType(invoice.getInvoiceType());
+		newInvoice.setIssued(invoice.getIssued());
+		newInvoice.setArrival(invoice.getArrival());
+		newInvoice.setCompany(company);
+		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	       if(fileName.contains("..")) {
+	       	System.out.println("not a valid file");
+	        }
+		  try {
+			  newInvoice.setInvoiceImage(Base64.getEncoder().encodeToString(file.getBytes()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  invoiceRepository.save(newInvoice);
 		
-		return "redirect:/";
+		return "redirect:/allunpaidSlips/"+newInvoice.getId();
 		
 	}
+	
+	@GetMapping("/invoices")
+	public String findAllInvoices(Model model) {
+		
+		model.addAttribute("invoices", invoiceRepository.findAll());
+		
+		return "allInvoices";
+		
+	}
+	
+	@GetMapping("/invoices/{id}")
+	public String findAllInvoicesByCompany(Model model, @PathVariable("id") Integer id) {
+		
+		model.addAttribute("invoices", invoiceRepository.findByCompanyId(id));
+		
+		return "allInvoices";
+		
+	}
+	
+	@GetMapping("/invoicesByInType/{id}")
+	public String findAllInvoicesByCompanyAndType(Model model, @PathVariable("id") Integer id) {
+		
+		model.addAttribute("invoices", invoiceRepository.findByCompanyIdAndInvoiceType(id,Type.INCOMMING ));
+		
+		return "allInvoices";
+		
+	}
+	
+	@GetMapping("/invoicesByOutType/{id}")
+	public String findAllInvoicesByCompanyAndOutType(Model model, @PathVariable("id") Integer id) {
+		
+		model.addAttribute("invoices", invoiceRepository.findByCompanyIdAndInvoiceType(id,Type.OUTGOING ));
+		
+		return "allInvoices";
+		
+	}
+	
+	@GetMapping("/slipsByInType/{id}")
+	public String findAllSlipsByCompanyAndType(Model model, @PathVariable("id") Integer id) {
+		
+		model.addAttribute("slips", isRepository.findByCompanyIdAndInvoiceAndSlipType(id,null,Type.INCOMMING ));
+		
+		return "allSlips";
+		
+	}
+	
+	@GetMapping("/slipsByOutType/{id}")
+	public String findAllSlipsByCompanyAndOutType(Model model, @PathVariable("id") Integer id) {
+		
+		model.addAttribute("slips", isRepository.findByCompanyIdAndInvoiceAndSlipType(id,null,Type.OUTGOING));
+		
+		return "allSlips";
+		
+	}
+	
+	
+	
 	
 	
 	

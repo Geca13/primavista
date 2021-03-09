@@ -54,8 +54,13 @@
       
       <td>
        <a th:href="@{/newSlip/{id}(id=${company?.id})}" class="btn btn-outline-danger">New Slip</a> 
-       <a th:href="@{/allunpaidSlips/{id}(id=${company?.id})}" class="btn btn-outline-danger">UnInvoiced</a>
-       <a th:href="@{/createInvoice/{id}(id=${company.id})}" class="btn btn-outline-danger">New Invoice</a> 
+       <a th:href="@{/slipsByInType/{id}(id=${company.id})}" class="btn btn-outline-danger">Inc Slip</a>
+       <a th:href="@{/slipsByOutType/{id}(id=${company.id})}" class="btn btn-outline-danger">Out Slip</a>
+       <a th:href="@{/allunpaidSlips/{id}(id=${company?.id})}" class="btn btn-outline-danger">AllUnInvoiced</a>
+       <a th:href="@{/createInvoice/{id}(id=${company.id})}" class="btn btn-outline-danger">New Inv</a> 
+       <a th:href="@{/invoices/{id}(id=${company.id})}" class="btn btn-outline-danger">Invoices</a>
+       <a th:href="@{/invoicesByInType/{id}(id=${company.id})}" class="btn btn-outline-danger">Inc Inv</a>
+       <a th:href="@{/invoicesByOutType/{id}(id=${company.id})}" class="btn btn-outline-danger">Out Inv</a>
         </td>
         <!-- 
        

@@ -20,7 +20,7 @@
 <div class="container">
   
   <h1>Company list</h1>
-  <form th:action="@{/allSlips}">
+  <form th:action="@{/allSlips}" >
   
   <input type="hidden" name="sortField" th:value="${sortField}" />
   <input type="hidden" name="sortDir" th:value="${sortDir}" />
@@ -37,11 +37,11 @@
     <tr>
       <th scope="col">Id</th>
       <th scope="col"> Company Name</th>
-      <th scope="col"> Total</th>
+      <th scope="col"> SlipNo</th>
       <th scope="col"> Date</th>
       <th scope="col"> Invoice</th>
-      <th scope="col"> Party</th>
       <th scope="col"> In/Out</th>
+      <th scope="col"> Image</th>
      
       
     </tr>
@@ -50,12 +50,12 @@
     <tr th:each="slip: ${slips}" >
       <td th:text="${slip.id}"></td> 
       <td th:text="${slip.company.companyName}"></td>
-      <td th:text="${slip.sum}"></td>
+      <td th:text="${slip.slipNumber}"></td>
       <td th:text="${#temporals.format(slip.issued, 'yyyy-MM-dd')}"></td> 
       <td th:text="${slip.invoice?.id}"></td>
-      <td th:text="${slip.partyNumber}"></td>
       <td th:text="${slip.slipType}"></td>
       <td> <img th:src="*{'data:image/png;base64,'+{slip.slipImage}}" style="width:200px"></td> 
+   <td>   <a th:href="@{/addunpaidSlip/{id}/{sid}(id = ${invoice?.id}, sid = ${slip.id})}" >Add</a></td> 
       <!--  
       <td>
        <a th:href="@{/updateCustomer/{id}(id=${company?.id})}" class="btn btn-outline-danger">Update</a> 

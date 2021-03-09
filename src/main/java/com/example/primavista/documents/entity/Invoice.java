@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,13 +37,15 @@ public class Invoice {
 	@ManyToOne
 	private Company company;
 	
-	private String partyNumber;
+	private String invoiceNumber;
 	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate issued;
 	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate arrival;
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private Type invoiceType;
 	
 	@Lob

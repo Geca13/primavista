@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,13 +31,12 @@ public class InvoiceSlip {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private Double sum;
-	
 	@ManyToOne
 	private Company company;
 	
-	private String partyNumber;
+	private String slipNumber;
 	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate issued;
 	
 	@Enumerated(EnumType.STRING)
@@ -46,7 +48,5 @@ public class InvoiceSlip {
 	@Lob
 	@Column
 	private String slipImage;
-	
-	
 	
 }

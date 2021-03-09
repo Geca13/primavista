@@ -21,27 +21,62 @@
 
 <div class="container">
 
-<h1>Add new Company</h1>
+
 
  <form th:action="@{/createInvoice/{id}(id=${company.id})}" th:object="${invoice}" method="post" enctype="multipart/form-data">
     
-    <h2>Company Information</h2>
+    <h2 style="margin-top:100px; margin-bottom:50px" >Invoice Information:</h2>
     
-    <div class="form-group row">
-    <label for="inputFirstName" class="col-sm-2 col-form-label">Total:</label>
-    <div class="col-sm-10">
-      <input type="text" th:field="*{sum}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="First Name">
+    
+  <div class="row">
+    <div class="col">
+      
+     <div class="form-group">
+    <label class="control-label" for="birthday">Amount</label>
+   
+      <input type="text" th:field="*{sum}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="10000$">
+  
+  </div>
+      
+      
     </div>
+    <div class="col">
+     
+     <div class="form-group ">
+    <label class="control-label" for="birthday">Invoice Number:</label>
+    
+      <input type="text" th:field="*{invoiceNumber}" required autofocus="autofocus" class="form-control" id="inputLastName" placeholder="1234567890">
+    
+  </div>
+     
+    </div>
+    
   </div>
   
-  <div class="form-group row">
-    <label for="inputLastName" class="col-sm-2 col-form-label">PartyNo:</label>
-    <div class="col-sm-10">
-      <input type="text" th:field="*{partyNumber}" required autofocus="autofocus" class="form-control" id="inputLastName" placeholder="Last name">
+  <div class="row">
+    <div class="col">
+    <div class="form-group"> <!-- Date input -->
+   
+        <label class="control-label" for="birthday">Issue Date:</label>
+        <input  class="form-control" th:field="*{issued}" type="date" id="birthday" name="birthday">
+        
+      </div>
+    
     </div>
-  </div>
-  
-  <div class="form-group col-md-4">
+    <div class="col">
+    
+    <div class="form-group"> <!-- Date input -->
+   
+        <label class="control-label" for="birthday">Arrival Date:</label>
+        <input  class="form-control" th:field="*{arrival}" type="date" id="birthday" name="birthday">
+        
+      </div>
+    
+    </div>
+    
+    <div class="col">
+    
+    <div class="form-group col-md-14">
       <label for="exampleFormControlSelect2">Type</label>
     <select class="form-control" th:field="*{invoiceType}"  id="exampleFormControlSelect2"required>
     
@@ -51,26 +86,30 @@
             th:text="${type.displayValue}"/>
        </select>
     </div>
-  
-  <div class="form-group">
-    <label for="exampleFormControlFile1">Upload image:</label>
+    
+    </div>
+  </div>
+    <div class="row">
+    <div class="col">
+    
+    <div class="form-group">
+    <label for="exampleFormControlFile1">Upload Invoice image:</label>
     <input type="file" name="file" class="form-control-file" id="exampleFormControlFile1" required>
   </div>
-  
-   <ul>
-  <li th:each="feat : ${slipss}">
-    <input type="checkbox" th:field="*{slips}" th:value="${feat}" />
+  </div>
+    <div class="col">
     
-  </li>
-</ul>
-  
+    <div class="form-group">
+      <button style=margin-top:30px; type="submit" class="btn btn-success">Submit</button>
+      
+    </div>
+  </div>
+
+  </div>
   
   
 
-   <div class="form-group">
-      <button type="submit" class="btn btn-success">Register</button>
-      
-    </div>
+   
    <br>
  
   </form>

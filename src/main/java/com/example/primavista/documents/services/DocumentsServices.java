@@ -37,6 +37,7 @@ public class DocumentsServices {
 		newCompany.setAccountNumber(company.getAccountNumber());
 		newCompany.setAddress(company.getAddress());
 		newCompany.setCompanyName(company.getCompanyName());
+		newCompany.setEmail(company.getEmail());
 		
 		return companyRepository.save(newCompany);
 		
@@ -49,9 +50,8 @@ public class DocumentsServices {
 		Company company = companyRepository.findById(id).get();
 		
 		newSlip.setCompany(company);
-		newSlip.setIssued(LocalDate.now());
-		newSlip.setPartyNumber(slip.getPartyNumber());
-		newSlip.setSum(slip.getSum());
+		newSlip.setIssued(slip.getIssued());
+		newSlip.setSlipNumber(slip.getSlipNumber());
 		newSlip.setSlipType(slip.getSlipType());
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 	       if(fileName.contains("..")) {
@@ -84,20 +84,7 @@ public class DocumentsServices {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		  List<InvoiceSlip> slips = new ArrayList<>();
-		  List<InvoiceSlip>currentSlipsNotInInvoice = slipRepository.findByCompanyAndInvoice(company, null);
-		  for (InvoiceSlip invoiceSlip : currentSlipsNotInInvoice) {
-			
-			if(invoiceSlip.getId() == sid) {
-				InvoiceSlip slip = slipRepository.findById(sid).get();
-			
-			slips.add(slip);
-			invoiceRepository.save(newInvoice);
-			slip.setInvoice(newInvoice);
-			slipRepository.save(slip);
-			}
-		}
-		  newInvoice.setSlips(slips);
+		  
 		
 		return invoiceRepository.save(newInvoice);
 		
