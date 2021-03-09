@@ -67,27 +67,31 @@ public class DocumentsServices {
 				
 	}
 	
-	public Invoice createNewInvoice(Invoice invoice, MultipartFile file, Integer id, Integer sid) {
-		Company company = companyRepository.findById(id).get();
-		Invoice newInvoice = new Invoice();
-		newInvoice.setInvoiceType(invoice.getInvoiceType());
-		newInvoice.setIssued(invoice.getIssued());
-		newInvoice.setArrival(invoice.getArrival());
-		newInvoice.setCompany(company);
-		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-	       if(fileName.contains("..")) {
-	       	System.out.println("not a valid file");
-	        }
-		  try {
-			  newInvoice.setInvoiceImage(Base64.getEncoder().encodeToString(file.getBytes()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		  
-		
-		return invoiceRepository.save(newInvoice);
+	
+	public Invoice removeSlipFromInvoice(Integer id,Integer sid) {
+		Invoice invoice = invoiceRepository.findById(id).get();
+		InvoiceSlip slip = slipRepository.findById(sid).get();
+		invoice.getSlips().remove(slip);
+		slip.setInvoice(null);
+		slipRepository.save(slip);
+		return invoiceRepository.save(invoice);
 		
 	}
+	
+	public void deleteInvoiceIncludingTheSlips(Integer id) {
+		
+		Invoice invoice = invoiceRepository.findById(id).get();
+		List<InvoiceSlip> slips = slipRepository.findAllByInvoice(invoice);
+		for (InvoiceSlip invoiceSlip : slips) {
+			invoice.getSlips().remove(invoiceSlip);
+			invoiceRepository.save(invoice);
+			invoiceSlip.setInvoice(null);
+			slipRepository.save(invoiceSlip);
+		}
+		slipRepository.deleteAll(slips);
+		
+		invoiceRepository.delete(invoice);
+	}
+	
 
 }

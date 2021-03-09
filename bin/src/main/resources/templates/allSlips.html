@@ -20,7 +20,7 @@
 <div class="container">
   
   <h1>Company list</h1>
-  <form th:action="@{/slipBySlipIdOrCompany}" >
+  <form th:action="@{/allSlips}" >
   
   <input type="hidden" name="sortField" th:value="${sortField}" />
   <input type="hidden" name="sortDir" th:value="${sortDir}" />
@@ -55,9 +55,7 @@
       <td th:text="${slip.invoice?.id}"></td>
       <td th:text="${slip.slipType}"></td>
       <td> <img th:src="*{'data:image/png;base64,'+{slip.slipImage}}" style="width:200px"></td> 
-   <td>   <a th:if="${slip.invoice eq null}" th:href="@{/addunpaidSlip/{id}/{sid}(id = ${invoice?.id}, sid = ${slip.id})}" >Add</a>
-          <a th:if="${slip.invoice eq null}" th:href="@{/deleteSlip/{id}(id=${slip?.id})}" class="btn btn-outline-danger">Delete</a> 
-   </td> 
+   <td>   <a th:href="@{/addunpaidSlip/{id}/{sid}(id = ${invoice?.id}, sid = ${slip.id})}" >Add</a></td> 
       <!--  
       <td>
        <a th:href="@{/updateCustomer/{id}(id=${company?.id})}" class="btn btn-outline-danger">Update</a> 

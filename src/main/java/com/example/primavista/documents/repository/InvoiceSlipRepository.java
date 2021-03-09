@@ -16,5 +16,7 @@ public interface InvoiceSlipRepository extends JpaRepository<InvoiceSlip, Intege
 	List<InvoiceSlip> findByCompanyAndInvoice(Company company, Invoice invoice);
 	
 	List<InvoiceSlip> findByCompanyIdAndInvoiceAndSlipType(Integer id, Invoice invoice, Type type);
+	
+	List<InvoiceSlip> findAllByInvoice(Invoice invoice);
 
 }

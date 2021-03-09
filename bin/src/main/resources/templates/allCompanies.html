@@ -20,7 +20,7 @@
 <div class="container">
   
   <h1>Company list</h1>
-  <form th:action="@{/slipBySlipIdOrCompany}" >
+  <form th:action="@{/allCompanies}">
   
   <input type="hidden" name="sortField" th:value="${sortField}" />
   <input type="hidden" name="sortDir" th:value="${sortDir}" />
@@ -37,34 +37,36 @@
     <tr>
       <th scope="col">Id</th>
       <th scope="col"> Company Name</th>
-      <th scope="col"> SlipNo</th>
-      <th scope="col"> Date</th>
-      <th scope="col"> Invoice</th>
-      <th scope="col"> In/Out</th>
-      <th scope="col"> Image</th>
+      <th scope="col"> Location</th>
+      <th scope="col">Account</th>
+      
+      <th scope="col"> Action</th>
      
       
     </tr>
   </thead>
   <tbody>
-    <tr th:each="slip: ${slips}" >
-      <td th:text="${slip.id}"></td> 
-      <td th:text="${slip.company.companyName}"></td>
-      <td th:text="${slip.slipNumber}"></td>
-      <td th:text="${#temporals.format(slip.issued, 'yyyy-MM-dd')}"></td> 
-      <td th:text="${slip.invoice?.id}"></td>
-      <td th:text="${slip.slipType}"></td>
-      <td> <img th:src="*{'data:image/png;base64,'+{slip.slipImage}}" style="width:200px"></td> 
-   <td>   <a th:if="${slip.invoice eq null}" th:href="@{/addunpaidSlip/{id}/{sid}(id = ${invoice?.id}, sid = ${slip.id})}" >Add</a>
-          <a th:if="${slip.invoice eq null}" th:href="@{/deleteSlip/{id}(id=${slip?.id})}" class="btn btn-outline-danger">Delete</a> 
-   </td> 
-      <!--  
+    <tr th:each="company: ${companies}" >
+      <td th:text="${company.id}"></td> 
+      <td th:text="${company.companyName}"></td>
+      <td th:text="${company.address}"></td>
+      <td th:text="${company.accountNumber}"></td>
+      
       <td>
-       <a th:href="@{/updateCustomer/{id}(id=${company?.id})}" class="btn btn-outline-danger">Update</a> 
-       <a th:href="@{/deleteCustomer/{id}(id=${company?.id})}" class="btn btn-outline-danger">Delete</a>
-       <a th:href="@{/getCustomer/{id}(id=${company?.id})}" class="btn btn-outline-danger">Profile</a> 
+       <a th:href="@{/newSlip/{id}(id=${company?.id})}" class="btn btn-outline-danger">New Slip</a> 
+       <a th:href="@{/slipsByInType/{id}(id=${company.id})}" class="btn btn-outline-danger">Inc Slip</a>
+       <a th:href="@{/slipsByOutType/{id}(id=${company.id})}" class="btn btn-outline-danger">Out Slip</a>
+       <a th:href="@{/allunpaidSlips/{id}(id=${company?.id})}" class="btn btn-outline-danger">AllUnInvoiced</a>
+       <a th:href="@{/createInvoice/{id}(id=${company.id})}" class="btn btn-outline-danger">New Inv</a> 
+       <a th:href="@{/invoices/{id}(id=${company.id})}" class="btn btn-outline-danger">Invoices</a>
+       <a th:href="@{/invoicesByInType/{id}(id=${company.id})}" class="btn btn-outline-danger">Inc Inv</a>
+       <a th:href="@{/invoicesByOutType/{id}(id=${company.id})}" class="btn btn-outline-danger">Out Inv</a>
+        </td>
+        <!-- 
+       
+       
        <a th:href="@{/paymentFrom/{id}(id=${company?.id})}" class="btn btn-outline-danger">New Payment</a> 
-      </td>
+     
       -->
      
       

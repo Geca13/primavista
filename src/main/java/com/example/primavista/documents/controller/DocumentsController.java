@@ -2,9 +2,7 @@ package com.example.primavista.documents.controller;
 
 import java.io.IOException;
 import java.util.Base64;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.example.primavista.documents.entity.Company;
 import com.example.primavista.documents.entity.Invoice;
 import com.example.primavista.documents.entity.InvoiceSlip;
@@ -41,9 +38,7 @@ public class DocumentsController {
 	@GetMapping("/")
 	public String splashPage(Model model) {
 		
-		
-		
-		return "index";
+	    return "index";
 	}
 	
 	@GetMapping("/createNewCompany")
@@ -88,7 +83,6 @@ public class DocumentsController {
 		docServices.saveNewInvoiceSlip(slip, id, file);
 		
 		return "redirect:/";
-		
 	}
 	
 	@GetMapping("/allSlips")
@@ -116,7 +110,6 @@ public class DocumentsController {
 		invoiceRepository.save(invoice);
 		isRepository.save(slip);
 		return "redirect:/allunpaidSlips/"+invoice.getId();
-		
 	}
 	
 	@GetMapping("/createInvoice/{id}")
@@ -127,9 +120,7 @@ public class DocumentsController {
 		model.addAttribute("invoice", new Invoice());
 		model.addAttribute("file", file);
 		
-		
 		return "newInvoice";
-		
 	}
 	
 	@PostMapping("/createInvoice/{id}")
@@ -156,7 +147,6 @@ public class DocumentsController {
 		  invoiceRepository.save(newInvoice);
 		
 		return "redirect:/allunpaidSlips/"+newInvoice.getId();
-		
 	}
 	
 	@GetMapping("/invoices")
@@ -165,7 +155,6 @@ public class DocumentsController {
 		model.addAttribute("invoices", invoiceRepository.findAll());
 		
 		return "allInvoices";
-		
 	}
 	
 	@GetMapping("/invoices/{id}")
@@ -174,7 +163,6 @@ public class DocumentsController {
 		model.addAttribute("invoices", invoiceRepository.findByCompanyId(id));
 		
 		return "allInvoices";
-		
 	}
 	
 	@GetMapping("/invoicesByInType/{id}")
@@ -183,7 +171,6 @@ public class DocumentsController {
 		model.addAttribute("invoices", invoiceRepository.findByCompanyIdAndInvoiceType(id,Type.INCOMMING ));
 		
 		return "allInvoices";
-		
 	}
 	
 	@GetMapping("/invoicesByOutType/{id}")
@@ -192,7 +179,6 @@ public class DocumentsController {
 		model.addAttribute("invoices", invoiceRepository.findByCompanyIdAndInvoiceType(id,Type.OUTGOING ));
 		
 		return "allInvoices";
-		
 	}
 	
 	@GetMapping("/slipsByInType/{id}")
@@ -201,7 +187,6 @@ public class DocumentsController {
 		model.addAttribute("slips", isRepository.findByCompanyIdAndInvoiceAndSlipType(id,null,Type.INCOMMING ));
 		
 		return "allSlips";
-		
 	}
 	
 	@GetMapping("/slipsByOutType/{id}")
@@ -210,12 +195,30 @@ public class DocumentsController {
 		model.addAttribute("slips", isRepository.findByCompanyIdAndInvoiceAndSlipType(id,null,Type.OUTGOING));
 		
 		return "allSlips";
-		
 	}
 	
+	@GetMapping("/removeSlip/{id}/{sid}")
+	public String removeSlipFromInvoice(@PathVariable("id") Integer id,@PathVariable("sid")  Integer sid) {
+		
+		docServices.removeSlipFromInvoice(id, sid);
+		
+		return "redirect:/invoices/"+id;
+	}
 	
+	@GetMapping("/deleteSlip/{id}")
+    public String deleteUnlinkedSlip(@PathVariable("id") Integer id) {
+		
+		InvoiceSlip slip = isRepository.findById(id).get();
+		isRepository.delete(slip);
+		
+		return "redirect:/allSlips";
+	}
 	
-	
-	
-	
+	@GetMapping("/deleteInvoiceCompletelly/{id}")
+	public String deleteTheInvoiceCompletelly(@PathVariable("id") Integer id) {
+		docServices.deleteInvoiceIncludingTheSlips(id);
+		return "redirect:/invoices";
+		
+	}
+		
 }

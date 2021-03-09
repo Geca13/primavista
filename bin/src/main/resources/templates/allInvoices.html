@@ -74,7 +74,6 @@
       <td th:text="${slip.company.companyName}"></td>
       <td th:text="${#temporals.format(slip.issued, 'yyyy-MM-dd')}"></td> 
       <td> <img th:src="*{'data:image/png;base64,'+{slip.slipImage}}" style="width:150px"></td>   
-      <td ><a th:href="@{/removeSlip/{id}/{sid}(id=${invoice?.id}, sid=${slip.id})}" class="btn btn-outline-danger">Remove</a> <br></td>
     </tr>
     
   </tbody>
@@ -83,7 +82,7 @@
     <p class="card-text" th:text = "${invoice.sum}"></p>
       </td>
       <td>
-       <a th:href="@{/deleteInvoiceCompletelly/{id}(id=${invoice?.id})}" class="btn btn-outline-danger">Del Comp</a> <br>
+       <a th:href="@{/deleteInvoice/{id}(id=${invoice?.id})}" class="btn btn-outline-danger">Delete</a> <br>
        <a th:href="@{/export/{id}(id=${invoice?.id})}" class="btn btn-outline-danger">Print</a> 
       </td>
     </tr>
