@@ -156,7 +156,7 @@ public class DocumentsServices {
     	oldInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
     	oldInvoice.setSum(invoice.getSum());
     	oldInvoice.setCompany(invoice.getCompany());
-    	oldInvoice.setSlips(invoice.getSlips());
+    	
     	invoiceRepository.save(oldInvoice);
     	if(invoice.getCompany().getCompanyName().equalsIgnoreCase("PrimaVista")) {
 			oldInvoice.setInvoiceType(Type.OUTGOING);
