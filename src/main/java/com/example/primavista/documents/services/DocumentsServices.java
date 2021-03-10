@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.primavista.documents.entity.BillReceipt;
 import com.example.primavista.documents.entity.Company;
 import com.example.primavista.documents.entity.Invoice;
 import com.example.primavista.documents.entity.InvoiceSlip;
 import com.example.primavista.documents.entity.Type;
+import com.example.primavista.documents.repository.BillReceiptRepository;
 import com.example.primavista.documents.repository.CompanyRepository;
 import com.example.primavista.documents.repository.InvoiceRepository;
 import com.example.primavista.documents.repository.InvoiceSlipRepository;
@@ -31,6 +33,9 @@ public class DocumentsServices {
 	
 	@Autowired
 	InvoiceRepository invoiceRepository;
+	
+	@Autowired
+	BillReceiptRepository receiptRepository;
 	
 	public Company saveNewCompany(Company company) {
 		
@@ -169,6 +174,38 @@ public class DocumentsServices {
 			slipRepository.save(slip);
 		}
     	return invoiceRepository.save(oldInvoice);
+    }
+    
+    public BillReceipt saveBillReceipt(BillReceipt receipt, MultipartFile file , String newCompany) throws YouMustEnterCompanyException {
+    	
+    	BillReceipt newReceipt = new BillReceipt();
+    	
+    	if(receipt.getCompany()==null && newCompany != null) {
+    		Company company = new Company();
+    		company.setCompanyName(newCompany);
+    		companyRepository.save(company);
+    		newReceipt.setCompany(company);
+    	}else if(receipt.getCompany() != null) {
+    		newReceipt.setCompany(receipt.getCompany());
+    	}else {
+    		throw new YouMustEnterCompanyException("Company fields cant be empty");
+    	}
+    	newReceipt.setDate(receipt.getDate());
+    	newReceipt.setSum(receipt.getSum());
+    	try {
+    		newReceipt.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	
+    	return receiptRepository.save(newReceipt);
+    }
+    
+    public void deleteBillReceipt(Integer id) {
+    	BillReceipt receipt = receiptRepository.findById(id).get();
+    	receipt.setCompany(null);
+    	receiptRepository.delete(receipt);
     }
 
 }

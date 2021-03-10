@@ -3,6 +3,7 @@ package com.example.primavista.documents.controller;
 import java.io.IOException;
 import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -11,14 +12,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.primavista.documents.entity.BillReceipt;
 import com.example.primavista.documents.entity.Company;
 import com.example.primavista.documents.entity.Invoice;
 import com.example.primavista.documents.entity.InvoiceSlip;
 import com.example.primavista.documents.entity.Type;
+import com.example.primavista.documents.repository.BillReceiptRepository;
 import com.example.primavista.documents.repository.CompanyRepository;
 import com.example.primavista.documents.repository.InvoiceRepository;
 import com.example.primavista.documents.repository.InvoiceSlipRepository;
 import com.example.primavista.documents.services.DocumentsServices;
+import com.example.primavista.documents.services.YouMustEnterCompanyException;
 
 @Controller
 public class DocumentsController {
@@ -34,7 +39,9 @@ public class DocumentsController {
 	
 	@Autowired
 	InvoiceRepository invoiceRepository;
-
+	
+	@Autowired
+    BillReceiptRepository receiptRepository;
 	@GetMapping("/")
 	public String splashPage(Model model) {
 		
@@ -288,14 +295,48 @@ public class DocumentsController {
 		model.addAttribute("companies", companyRepository.findAll());
 		model.addAttribute("slips", isRepository.findAllByInvoice(invoiceRepository.findById(id).get()));
 		return "updateInvoiceForm";
-		
 	}
+	
 	@PostMapping("/updateInvoice/{id}")
 	public String completeInvoiceUpdate(@ModelAttribute("invoice") Invoice invoice, @PathVariable("id") Integer id) {
 		docServices.updateInvoiceWithoutImage(id, invoice);
 		return "redirect:/invoices";
 	}
 	
+	@GetMapping("/newReceipt")
+	public String addNewReceipt(Model model, MultipartFile file) {
+		
+		model.addAttribute("file", file);
+		model.addAttribute("receipt", new BillReceipt());
+		model.addAttribute("companies", companyRepository.findAll());
+		return "newReceiptForm";
+	}
 	
+	@PostMapping("/newReceipt")
+	public String createNewReceipt(@ModelAttribute("receipt") BillReceipt receipt, MultipartFile file,@Param(value="newCompany")String newCompany) {
+		
+		try {
+			docServices.saveBillReceipt(receipt, file, newCompany);
+		} catch (YouMustEnterCompanyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "redirect:/";
+	}
+	
+	@GetMapping("/deleteReceipt/{id}")
+	public String deleteReceipt(@PathVariable("id")Integer id) {
+		
+		docServices.deleteBillReceipt(id);
+		return "redirect:/allReceipts";
+	}
+	
+	@GetMapping("/allReceipts")
+	public String getAllReceipts(Model model) {
+		
+		model.addAttribute("receipts", receiptRepository.findAll());
+		return "allReceiptsPage";
+		
+	}
 		
 }
