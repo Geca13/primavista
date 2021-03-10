@@ -130,7 +130,13 @@ public class DocumentsController {
 		Invoice newInvoice = new Invoice();
 		newInvoice.setSum(invoice.getSum());
 		newInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
-		newInvoice.setInvoiceType(invoice.getInvoiceType());
+		
+		if(company.getCompanyName().equalsIgnoreCase("PrimaVista")) {
+			newInvoice.setInvoiceType(Type.OUTGOING);
+		}else {
+			newInvoice.setInvoiceType(Type.INCOMMING);
+		}
+		
 		newInvoice.setIssued(invoice.getIssued());
 		newInvoice.setArrival(invoice.getArrival());
 		newInvoice.setCompany(company);
@@ -220,5 +226,76 @@ public class DocumentsController {
 		return "redirect:/invoices";
 		
 	}
+	
+	@GetMapping("/deleteInvoiceKeepSlips/{id}")
+	public String deleteTheInvoicewithoutSlips(@PathVariable("id") Integer id) {
+		docServices.deleteInvoiceKeepTheSlips(id);
+		return "redirect:/invoices";
+		
+	}
+	
+	
+	@GetMapping("/changeInvoicePhoto/{id}")
+	public String getPhotoForm(Model model,@PathVariable("id") Integer id, MultipartFile file) {
+		
+		model.addAttribute("invoice", invoiceRepository.findById(id).get());
+		model.addAttribute("file", file);
+		return "photoForm";
+		
+	}
+	
+	
+	@PostMapping("/changeInvoicePhoto/{id}")
+	public String updateInvoiceImage(@PathVariable("id") Integer id, MultipartFile file) {
+		docServices.changeInvoicePhoto(id, file);
+		return "redirect:/invoices";
+		
+	}
+	
+	@GetMapping("/changeSlipPhoto/{id}")
+	public String getSlipPhotoForm(Model model,@PathVariable("id") Integer id, MultipartFile file) {
+		
+		model.addAttribute("slip", isRepository.findById(id).get());
+		model.addAttribute("file", file);
+		return "slipPhotoForm";
+		
+	}
+	
+	
+	@PostMapping("/changeSlipPhoto/{id}")
+	public String updateSlipImage(@PathVariable("id") Integer id, MultipartFile file) {
+		docServices.changeSlipPhoto(id, file);
+		return "redirect:/allSlips";
+		
+	}
+	
+	@GetMapping("/updateSlip/{id}")
+	public String updateSlipWithoutImageForm(Model model , @PathVariable("id")Integer id) {
+		model.addAttribute("slip", isRepository.findById(id).get());
+		model.addAttribute("companies", companyRepository.findAll());
+		return "updateSlip";
+		
+	}
+	@PostMapping("/updateSlip/{id}")
+	public String completeSlipUpdate(@ModelAttribute("slip") InvoiceSlip slip, @PathVariable("id") Integer id) {
+		docServices.updateInvoiceSlipwithoutImage(id, slip);
+		return "redirect:/allSlips";
+	}
+	
+	@GetMapping("/updateInvoice/{id}")
+	public String updateInvoiceWithoutImageForm(Model model , @PathVariable("id")Integer id) {
+		model.addAttribute("invoice", invoiceRepository.findById(id).get());
+		model.addAttribute("companies", companyRepository.findAll());
+		model.addAttribute("slips", isRepository.findAllByInvoice(invoiceRepository.findById(id).get()));
+		return "updateInvoiceForm";
+		
+	}
+	@PostMapping("/updateInvoice/{id}")
+	public String completeInvoiceUpdate(@ModelAttribute("invoice") Invoice invoice, @PathVariable("id") Integer id) {
+		docServices.updateInvoiceWithoutImage(id, invoice);
+		return "redirect:/invoices";
+	}
+	
+	
 		
 }

@@ -23,33 +23,12 @@
 
 
 
- <form th:action="@{/newSlip/{id}(id=${company.id})}" th:object="${slip}" method="post" enctype="multipart/form-data">
+ <form th:action="@{/changeSlipPhoto/{id}(id=${slip.id})}" method="post" enctype="multipart/form-data">
     
-    <h2 style="margin-top:100px; margin-bottom:50px" >Slip Information:</h2>
+    <h2 style="margin-top:100px; margin-bottom:50px" >Change Image: </h2>
     
     
-  <div class="row">
-    <div class="col">
-      
-     <div class="form-group">
-    <label class="control-label" for="birthday">Slip Number:</label>
-   
-      <input type="text" th:field="*{slipNumber}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="1100-10000-100">
   
-  </div>
-  </div>
-    <div class="col">
-    
-    <div class="form-group"> <!-- Date input -->
-   
-        <label class="control-label" for="birthday">Issue Date:</label>
-        <input  class="form-control" th:field="*{issued}" type="date" id="birthday" name="birthday">
-        
-      </div>
-     
-    </div>
-    
-  </div>
   
   <div class="row">
     <div class="col">

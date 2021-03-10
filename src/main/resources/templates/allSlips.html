@@ -54,9 +54,10 @@
       <td th:text="${#temporals.format(slip.issued, 'yyyy-MM-dd')}"></td> 
       <td th:text="${slip.invoice?.id}"></td>
       <td th:text="${slip.slipType}"></td>
-      <td> <img th:src="*{'data:image/png;base64,'+{slip.slipImage}}" style="width:200px"></td> 
+      <td> <img th:src="*{'data:image/png;base64,'+{slip.slipImage}}" style="width:200px"><a th:href="@{/changeSlipPhoto/{id}(id=${slip.id})}" >Update Image</a> <br></td> 
    <td>   <a th:if="${slip.invoice eq null}" th:href="@{/addunpaidSlip/{id}/{sid}(id = ${invoice?.id}, sid = ${slip.id})}" >Add</a>
           <a th:if="${slip.invoice eq null}" th:href="@{/deleteSlip/{id}(id=${slip?.id})}" class="btn btn-outline-danger">Delete</a> 
+          <a th:href="@{/updateSlip/{id}(id=${slip?.id})}" class="btn btn-outline-danger">Update</a> 
    </td> 
       <!--  
       <td>
@@ -72,13 +73,7 @@
 </form>
 
  </div >
-  
-  
-  
-
- 
- 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
   </script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
