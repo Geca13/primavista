@@ -262,5 +262,12 @@ public class DocumentsServices {
 		 return corRepository.save(correspondence);
 		 
 	 }
+	 
+	 public void deleteCorrespondence(Integer id) {
+		 
+		 Correspondence correspondence = corRepository.findById(id).get();
+		 correspondence.setInstitution(null);
+		 corRepository.delete(correspondence);
+	}
 
 }

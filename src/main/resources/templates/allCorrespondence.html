@@ -19,7 +19,7 @@
 
 <div class="container">
   
-  <h1>Company list</h1>
+  <h1>Correspondence list</h1>
   <form th:action="@{/slipBySlipIdOrCompany}" >
   
   <input type="hidden" name="sortField" th:value="${sortField}" />
@@ -58,7 +58,8 @@
       
       <td> <img th:src="*{'data:image/png;base64,'+{slip.image}}" style="width:200px"></td> 
    <td>   
-          <a  th:href="@{/deleteReceipt/{id}(id=${slip?.id})}" class="btn btn-outline-danger">Delete</a> 
+   
+          <a  th:href="@{/deleteCorrespondence/{id}(id=${slip?.id})}" class="btn btn-outline-danger">Delete</a> 
           
    </td> 
       
