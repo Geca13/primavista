@@ -269,5 +269,19 @@ public class DocumentsServices {
 		 correspondence.setInstitution(null);
 		 corRepository.delete(correspondence);
 	}
+	 
+	 public List<BillReceipt> findBetweenDates(Integer id, String startDate, String endDate ){
+		 Company company = companyRepository.findById(id).get();
+		 LocalDate d1 = LocalDate.parse(startDate);
+	     LocalDate d2 = LocalDate.parse(endDate);
+		 if(company == null) {
+			 List<BillReceipt> list = receiptRepository.findByDateBetween(d1, d2);
+			 return list;
+		 }
+		 List<BillReceipt> list = receiptRepository.findByCompanyAndDateBetween(company,d1, d2);
+		 
+		 return list;
+		 
+	 }
 
 }
