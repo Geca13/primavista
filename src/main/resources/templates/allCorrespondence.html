@@ -37,8 +37,10 @@
     <tr>
       <th scope="col">Id</th>
       
-      <th scope="col"> Amount</th>
-      <th scope="col"> Company Name</th>
+      <th scope="col"> Archive Number</th>
+      <th scope="col"> Institution Name</th>
+      <th scope="col"> Description</th>
+      <th scope="col"> In/Out</th>
       <th scope="col"> Date</th>
       <th scope="col"> Image</th>
      
@@ -46,10 +48,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr th:each="slip: ${receipts}" >
+    <tr th:each="slip: ${allCorrespondence}" >
       <td th:text="${slip.id}"></td> 
-      <td th:text="${slip.sum}"></td> 
-      <td th:text="${slip.company?.companyName}"></td>
+      <td th:text="${slip.archiveNumber}"></td> 
+      <td th:text="${slip.institution?.institutionName}"></td>
+      <td th:text="${slip.description}"></td> 
+      <td th:text="${slip.type.displayValue}"></td> 
       <td th:text="${#temporals.format(slip.date, 'yyyy-MM-dd')}"></td> 
       
       <td> <img th:src="*{'data:image/png;base64,'+{slip.image}}" style="width:200px"></td> 

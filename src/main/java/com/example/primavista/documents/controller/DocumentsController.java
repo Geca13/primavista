@@ -12,14 +12,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.example.primavista.documents.entity.BillReceipt;
 import com.example.primavista.documents.entity.Company;
+import com.example.primavista.documents.entity.Correspondence;
 import com.example.primavista.documents.entity.Invoice;
 import com.example.primavista.documents.entity.InvoiceSlip;
 import com.example.primavista.documents.entity.Type;
 import com.example.primavista.documents.repository.BillReceiptRepository;
 import com.example.primavista.documents.repository.CompanyRepository;
+import com.example.primavista.documents.repository.CorrespondenceRepository;
+import com.example.primavista.documents.repository.InstitutionRepository;
 import com.example.primavista.documents.repository.InvoiceRepository;
 import com.example.primavista.documents.repository.InvoiceSlipRepository;
 import com.example.primavista.documents.services.DocumentsServices;
@@ -42,6 +44,13 @@ public class DocumentsController {
 	
 	@Autowired
     BillReceiptRepository receiptRepository;
+	
+	@Autowired
+	InstitutionRepository institutionRepository;
+	
+	@Autowired
+	CorrespondenceRepository corRepository;
+	
 	@GetMapping("/")
 	public String splashPage(Model model) {
 		
@@ -54,16 +63,30 @@ public class DocumentsController {
 		model.addAttribute("company", new Company());
 		
 		return "newCompanyForm";
-		
 	}
-	
+
 	@PostMapping("/createNewCompany")
 	public String saveNewCompany(@ModelAttribute("company") Company company) {
 		
 		docServices.saveNewCompany(company);
 		
 		return "redirect:/";
+	}
+	
+	@GetMapping("/updateCompany/{id}")
+	public String getUpdateForm(@PathVariable("id")Integer id, Model model) {
 		
+		model.addAttribute("company", companyRepository.findById(id).get());
+		
+		return "updateCompany";
+	}
+	
+	@PostMapping("/updateCompany/{id}")
+	public String completeUpdate(@PathVariable("id")Integer id,Company company) {
+		
+		docServices.updateCompany(id, company);
+		
+		return "redirect:/";
 	}
 	
 	@GetMapping("/allCompanies")
@@ -72,7 +95,6 @@ public class DocumentsController {
 		model.addAttribute("companies", companyRepository.findAll());
 		
 		return "allCompanies";
-		
 	}
 	
 	@GetMapping("/newSlip/{id}")
@@ -248,15 +270,12 @@ public class DocumentsController {
 		model.addAttribute("invoice", invoiceRepository.findById(id).get());
 		model.addAttribute("file", file);
 		return "photoForm";
-		
 	}
-	
 	
 	@PostMapping("/changeInvoicePhoto/{id}")
 	public String updateInvoiceImage(@PathVariable("id") Integer id, MultipartFile file) {
 		docServices.changeInvoicePhoto(id, file);
 		return "redirect:/invoices";
-		
 	}
 	
 	@GetMapping("/changeSlipPhoto/{id}")
@@ -265,15 +284,12 @@ public class DocumentsController {
 		model.addAttribute("slip", isRepository.findById(id).get());
 		model.addAttribute("file", file);
 		return "slipPhotoForm";
-		
 	}
-	
 	
 	@PostMapping("/changeSlipPhoto/{id}")
 	public String updateSlipImage(@PathVariable("id") Integer id, MultipartFile file) {
 		docServices.changeSlipPhoto(id, file);
 		return "redirect:/allSlips";
-		
 	}
 	
 	@GetMapping("/updateSlip/{id}")
@@ -281,8 +297,8 @@ public class DocumentsController {
 		model.addAttribute("slip", isRepository.findById(id).get());
 		model.addAttribute("companies", companyRepository.findAll());
 		return "updateSlip";
-		
 	}
+	
 	@PostMapping("/updateSlip/{id}")
 	public String completeSlipUpdate(@ModelAttribute("slip") InvoiceSlip slip, @PathVariable("id") Integer id) {
 		docServices.updateInvoiceSlipwithoutImage(id, slip);
@@ -313,10 +329,14 @@ public class DocumentsController {
 	}
 	
 	@PostMapping("/newReceipt")
-	public String createNewReceipt(@ModelAttribute("receipt") BillReceipt receipt, MultipartFile file,@Param(value="newCompany")String newCompany) {
+	public String createNewReceipt(@ModelAttribute("receipt") BillReceipt receipt, MultipartFile file,@Param(value="oldCompany")String oldCompany,@Param(value="newCompany")String newCompany) {
+		
+		if(oldCompany.equals("") && newCompany.equals("")) {
+			return "redirect:/newReceipt?noCompanySelected";
+		}
 		
 		try {
-			docServices.saveBillReceipt(receipt, file, newCompany);
+			docServices.saveBillReceipt(receipt, file,oldCompany, newCompany);
 		} catch (YouMustEnterCompanyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -336,7 +356,38 @@ public class DocumentsController {
 		
 		model.addAttribute("receipts", receiptRepository.findAll());
 		return "allReceiptsPage";
+	}
+	
+	@GetMapping("/newCorrespondence")
+	public String addNewCorrespondence(Model model, MultipartFile file) {
+		
+		model.addAttribute("file", file);
+		model.addAttribute("correspondence", new Correspondence());
+		model.addAttribute("institutions", institutionRepository.findAll());
+		return "newCorrespondence";
+	}
+	
+	@PostMapping("/newCorrespondence")
+	public String createNewCorrespondence(@ModelAttribute("correspondence") Correspondence correspondence, MultipartFile file,@Param(value="oldInstitution")String oldInstitution,@Param(value="newInstitution")String newInstitution) {
+		
+		if(oldInstitution.equals("") && newInstitution.equals("")) {
+			return "redirect:/newCorrespondence?noCompanySelected";
+		}
+		
+		docServices.saveNewCorrespondence(correspondence, file, oldInstitution, newInstitution);
+		
+		return "redirect:/";
+	}
+	
+	@GetMapping("/allCorrespondence")
+	public String allCorrespondences(Model model) {
+		
+		model.addAttribute("allCorrespondence", corRepository.findAll());
+		
+		return "allCorrespondence";
 		
 	}
+	
+	
 		
 }

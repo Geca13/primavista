@@ -14,11 +14,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.primavista.documents.entity.BillReceipt;
 import com.example.primavista.documents.entity.Company;
+import com.example.primavista.documents.entity.Correspondence;
+import com.example.primavista.documents.entity.Institution;
 import com.example.primavista.documents.entity.Invoice;
 import com.example.primavista.documents.entity.InvoiceSlip;
 import com.example.primavista.documents.entity.Type;
 import com.example.primavista.documents.repository.BillReceiptRepository;
 import com.example.primavista.documents.repository.CompanyRepository;
+import com.example.primavista.documents.repository.CorrespondenceRepository;
+import com.example.primavista.documents.repository.InstitutionRepository;
 import com.example.primavista.documents.repository.InvoiceRepository;
 import com.example.primavista.documents.repository.InvoiceSlipRepository;
 
@@ -37,6 +41,12 @@ public class DocumentsServices {
 	@Autowired
 	BillReceiptRepository receiptRepository;
 	
+	@Autowired
+	CorrespondenceRepository corRepository;
+	
+	@Autowired
+	InstitutionRepository institutionRepository;
+	
 	public Company saveNewCompany(Company company) {
 		
 		Company newCompany = new Company();
@@ -46,8 +56,17 @@ public class DocumentsServices {
 		newCompany.setEmail(company.getEmail());
 		
 		return companyRepository.save(newCompany);
+	}
+	
+	public Company updateCompany(Integer id, Company company) {
 		
+		Company companyForUpdate = companyRepository.findById(id).get();
+		companyForUpdate.setAccountNumber(company.getAccountNumber());
+		companyForUpdate.setAddress(company.getAddress());
+		companyForUpdate.setEmail(company.getEmail());
+		companyForUpdate.setCompanyName(company.getCompanyName());
 		
+		return companyRepository.save(companyForUpdate);
 	}
 	
 	public InvoiceSlip saveNewInvoiceSlip(InvoiceSlip slip,Integer id, MultipartFile file) {
@@ -176,36 +195,72 @@ public class DocumentsServices {
     	return invoiceRepository.save(oldInvoice);
     }
     
-    public BillReceipt saveBillReceipt(BillReceipt receipt, MultipartFile file , String newCompany) throws YouMustEnterCompanyException {
+    public BillReceipt saveBillReceipt(BillReceipt receipt, MultipartFile file ,String oldCompany, String newCompany) throws YouMustEnterCompanyException {
     	
-    	BillReceipt newReceipt = new BillReceipt();
-    	
-    	if(receipt.getCompany()==null && newCompany != null) {
+    	if(!newCompany.equals("")) {
     		Company company = new Company();
     		company.setCompanyName(newCompany);
     		companyRepository.save(company);
-    		newReceipt.setCompany(company);
-    	}else if(receipt.getCompany() != null) {
-    		newReceipt.setCompany(receipt.getCompany());
-    	}else {
-    		throw new YouMustEnterCompanyException("Company fields cant be empty");
-    	}
-    	newReceipt.setDate(receipt.getDate());
-    	newReceipt.setSum(receipt.getSum());
-    	try {
-    		newReceipt.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+    		receipt.setCompany(company);
+    		
+        	try {
+        		receipt.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+        	
+        	return receiptRepository.save(receipt);
+    	} 
+    	
+    	Company company1 =companyRepository.findByCompanyName(oldCompany);
+    		receipt.setCompany(company1);
+    	
+          try {
+    		receipt.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    	
-    	return receiptRepository.save(newReceipt);
-    }
-    
-    public void deleteBillReceipt(Integer id) {
+    	      return receiptRepository.save(receipt);
+    	 }
+    	 
+	 public void deleteBillReceipt(Integer id) {
     	BillReceipt receipt = receiptRepository.findById(id).get();
     	receipt.setCompany(null);
     	receiptRepository.delete(receipt);
     }
+	 
+	 public Correspondence saveNewCorrespondence(Correspondence correspondence, MultipartFile file,String oldInstitution, String newInstitution) {
+		 
+		 if(!newInstitution.equals("")) {
+	    		Institution institution = new Institution();
+	    		institution.setInstitutionName(newInstitution);
+	    		institutionRepository.save(institution);
+	    		correspondence.setInstitution(institution);;
+	    		
+	        	try {
+	        		correspondence.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+	    			} catch (IOException e) {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	    			}
+	        	
+	        	return corRepository.save(correspondence);
+	    	} 
+	    	
+		 Institution institution =institutionRepository.findByInstitutionName(oldInstitution);
+		      correspondence.setInstitution(institution);
+	    	
+	          try {
+	        	  correspondence.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		 
+		 return corRepository.save(correspondence);
+		 
+	 }
 
 }

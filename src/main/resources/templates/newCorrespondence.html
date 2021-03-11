@@ -22,10 +22,10 @@
 <div class="container">
 
 <div th:if="${param.noCompanySelected}">
-      <div class="alert alert-info">You didn't enter company.</div>
+      <div class="alert alert-info">You didn't enter Institution.</div>
      </div>
 
- <form th:action="@{/newReceipt}" th:object="${receipt}" method="post" enctype="multipart/form-data">
+ <form th:action="@{/newCorrespondence}" th:object="${correspondence}" method="post" enctype="multipart/form-data">
     
     <h2 style="margin-top:100px; margin-bottom:50px" >Invoice Information:</h2>
     
@@ -34,9 +34,9 @@
     <div class="col">
       
      <div class="form-group">
-    <label class="control-label" for="birthday">Amount</label>
+    <label class="control-label" for="birthday">Archive Number</label>
    
-      <input type="text" th:field="*{sum}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="10000$">
+      <input type="text" th:field="*{archiveNumber}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="10000$">
   
   </div>
       
@@ -46,12 +46,12 @@
     <div class="col">
      
      <div class="form-group ">
-      <label for="exampleFormControlSelect2">Select Company:</label>
-    <select class="form-control" th:name="oldCompany"  id="exampleFormControlSelect2">
+      <label for="exampleFormControlSelect2">Select Institution:</label>
+    <select class="form-control" th:name="oldInstitution"  id="exampleFormControlSelect2">
         <option value=""></option>
-      <option th:each="company : ${companies}"
-        th:value="${company.companyName}"
-        th:text="${company.companyName}"/>
+      <option th:each="institution : ${institutions}"
+        th:value="${institution.institutionName}"
+        th:text="${institution.institutionName}"/>
        </select>
     </div>
      
@@ -60,9 +60,9 @@
     <div class="col">
       
      <div class="form-group">
-    <label class="control-label" for="birthday">Enter new Company:</label>
+    <label class="control-label" for="birthday">Enter new Institution:</label>
    
-      <input type="text" th:name="newCompany"  autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="10000$">
+      <input type="text" th:name="newInstitution"  autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="10000$">
   
   </div>
       
@@ -75,28 +75,52 @@
     <div class="col">
     <div class="form-group"> <!-- Date input -->
    
-        <label class="control-label" for="birthday">Issue Date:</label>
-        <input  class="form-control" th:field="*{date}" type="date" id="birthday" name="birthday">
+        <label class="control-label" for="birthday">Date:</label>
+        <input  class="form-control" th:field="*{date}" type="date" id="birthday" name="birthday" required>
         
       </div>
     
     </div>
     <div class="col">
     
-    <div class="form-group">
-    <label for="exampleFormControlFile1">Upload Invoice image:</label>
-    <input type="file" name="file" class="form-control-file" id="exampleFormControlFile1" required>
+    <div class="form-group ">
+      <label class="control-label" for="birthday">IN/OUT:</label>
+    <select class="form-control" th:field="*{type}"  id="exampleFormControlSelect2"required>
+    
+      <option th:each="type : ${T(com.example.primavista.documents.entity.Type).values()}"
+      
+      th:value="${type}"
+            th:text="${type.displayValue}"/>
+       </select>
+    </div>
+    
+    </div>
+    
+    
   </div>
+    <div class="row">
+    
+    <div class="col">
+    
+    <div class="form-group">
+    <label for="exampleFormControlTextarea1"></label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{description}" required rows="3"placeholder="Type your comment here..."></textarea>
+    </div>
+    
+    
     
     </div>
     
     <div class="col">
     
-    
+    <div class="form-group">
+    <label for="exampleFormControlFile1">Upload Correspondence image:</label>
+    <input type="file" name="file" class="form-control-file" id="exampleFormControlFile1" required>
+  </div>
     
     </div>
-  </div>
-    <div class="row">
+    
+    
     <div class="col">
     <div class="form-group">
       <button style=margin-top:30px; type="submit" class="btn btn-success">Submit</button>
