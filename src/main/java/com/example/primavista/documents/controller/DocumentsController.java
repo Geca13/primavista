@@ -121,6 +121,7 @@ public class DocumentsController {
 	public String getAllSlips(Model model) {
 		
 		model.addAttribute("slips", isRepository.findAll());
+		model.addAttribute("companies", companyRepository.findAll());
 		
 		return "allSlips";
 	}

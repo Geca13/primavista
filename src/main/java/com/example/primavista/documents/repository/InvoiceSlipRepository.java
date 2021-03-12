@@ -1,5 +1,6 @@
 package com.example.primavista.documents.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,11 @@ public interface InvoiceSlipRepository extends JpaRepository<InvoiceSlip, Intege
 	List<InvoiceSlip> findByCompanyIdAndInvoiceAndSlipType(Integer id, Invoice invoice, Type type);
 	
 	List<InvoiceSlip> findAllByInvoice(Invoice invoice);
+	
+    List<InvoiceSlip> findByCompanyAndIssuedBetween(Company company,LocalDate startDate , LocalDate endDate);
+	
+	List<InvoiceSlip> findByIssuedBetween(LocalDate startDate , LocalDate endDate);
+	
+	List<InvoiceSlip> findAllByOrderByIssuedAsc();
 
 }
