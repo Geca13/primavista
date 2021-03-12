@@ -20,17 +20,52 @@
 <div class="container">
   
   <h1>Correspondence list</h1>
-  <form th:action="@{/slipBySlipIdOrCompany}" >
+  <form th:action="@{/correspondencesBetweenDates}" >
   
-  <input type="hidden" name="sortField" th:value="${sortField}" />
-  <input type="hidden" name="sortDir" th:value="${sortDir}" />
+  <div class="row">
   
-  Filter: <input type="text" name="search" id="search" size="50"  required />
-    &nbsp;
-    <input type="submit" value="Search" />
-    &nbsp;
-    <a th:href="@{/allCompanies}">All</a> 
-<br> <br>
+  <div class="col">
+    
+    <div class="form-group ">
+      <label for="exampleFormControlSelect2">Select Company:</label>
+    <select class="form-control" th:name="id"  id="exampleFormControlSelect2">
+        <option value=""></option>
+      <option th:each="company : ${companies}"
+        th:value="${company.id}"
+        th:text="${company.companyName}"/>
+       </select>
+    </div>
+    
+    </div>
+    <div class="col">
+    <div class="form-group"> <!-- Date input -->
+   
+        <label class="control-label" for="birthday">Start Date:</label>
+        <input  class="form-control" th:name="startDate" type="date" id="birthday" name="birthday" >
+        
+      </div>
+    
+    </div>
+    <div class="col">
+    
+    <div class="form-group"> <!-- Date input -->
+   
+        <label class="control-label" for="birthday">End Date:</label>
+        <input  class="form-control" th:name="endDate" type="date" id="birthday" name="birthday">
+        
+      </div>
+    
+    </div>
+    
+    
+  </div>
+  <div class="col">
+    <div class="form-group">
+      <button style=margin-top:30px; type="submit" class="btn btn-success">Filter</button>
+      
+    </div>
+    
+  </div>
   
     <table class="table table-striped table-dark">
   <thead>

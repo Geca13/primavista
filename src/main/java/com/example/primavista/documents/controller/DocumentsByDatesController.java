@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.example.primavista.documents.entity.BillReceipt;
+import com.example.primavista.documents.entity.Correspondence;
 import com.example.primavista.documents.entity.Invoice;
 import com.example.primavista.documents.entity.InvoiceSlip;
 import com.example.primavista.documents.repository.BillReceiptRepository;
@@ -270,6 +271,65 @@ public class DocumentsByDatesController {
 		 model.addAttribute("slips", list);
 		 model.addAttribute("companies", companyRepository.findAll());
 		 return "allSlips";
+	}
+	
+	@GetMapping("/correspondencesBetweenDates")
+	public String findCorrespondenceBetweenDates(Model model,@Param(value="id")String id,@Param(value="startDate") String startDate,@Param(value="endDate") String endDate ){
+		
+		if(id.equals("")&& startDate.isEmpty() && endDate.isEmpty()) {
+			return "redirect:/allCorrespondence?empty";
+		}
+		//site vrati kompanija PROVERENO
+		if(!id.equals("")&& startDate.isEmpty() && endDate.isEmpty()) {
+			
+			List<Correspondence> list = corRepository.findByInstitutionAndDateBetween(institutionRepository.findById(Integer.valueOf(id)).get(),corRepository.findAllByOrderByDateAsc().get(0).getDate(), LocalDate.now());
+			model.addAttribute("allCorrespondence", list);
+			model.addAttribute("institution", institutionRepository.findAll());
+		    return "allCorrespondence";
+		}
+		//site vrati gi od -do PROVERENO
+		 if(id.equals("") && !startDate.isEmpty() && !endDate.isEmpty()) {
+		    
+			 List<Correspondence> list = corRepository.findByDateBetween(LocalDate.parse(startDate), LocalDate.parse(endDate));
+			 model.addAttribute("allCorrespondence", list);
+			 model.addAttribute("institution", institutionRepository.findAll());
+			 return "allCorrespondence";
+		 }
+		 //site od pocetok do opredelena data PROVERENO
+		 if(id.equals("") && startDate.isEmpty() && !endDate.isEmpty()) {
+			 
+             List<Correspondence> list = corRepository.findByDateBetween(corRepository.findAllByOrderByDateAsc().get(0).getDate(), LocalDate.parse(endDate));
+			 model.addAttribute("allCorrespondence", list);
+			 model.addAttribute("institution", institutionRepository.findAll());
+			 return "allCorrespondence";
+		 }
+		 //site od data do denes PROVERENO
+		 if(id.equals("") && !startDate.isEmpty() && endDate.isEmpty()) {
+		    
+			 List<Correspondence> list = corRepository.findByDateBetween(LocalDate.parse(startDate), LocalDate.now());
+			 model.addAttribute("allCorrespondence", list);
+			 model.addAttribute("institution", institutionRepository.findAll());
+			 return "allCorrespondence";
+		 }
+		 //site po kompanija od data do denes PROVERENO
+		 if(!id.equals("") && !startDate.isEmpty() && endDate.isEmpty()) {
+			 List<Correspondence> list = corRepository.findByInstitutionAndDateBetween(institutionRepository.findById(Integer.valueOf(id)).get(),LocalDate.parse(startDate), LocalDate.now());
+			 model.addAttribute("allCorrespondence", list);
+			 model.addAttribute("institution", institutionRepository.findAll());
+			 return "allCorrespondence";
+		 }
+		 //site po kompanija od pocetna data do opredelena data PROVERENO
+		 if(!id.equals("") && startDate.isEmpty() && !endDate.isEmpty()) {
+			 List<Correspondence> list = corRepository.findByInstitutionAndDateBetween(institutionRepository.findById(Integer.valueOf(id)).get(),corRepository.findAllByOrderByDateAsc().get(0).getDate(), LocalDate.parse(endDate));
+			 model.addAttribute("allCorrespondence", list);
+			 model.addAttribute("institution", institutionRepository.findAll());
+			 return "allCorrespondence";
+		 }
+		 //rezultati so site parametri PROVERENO
+		 List<Correspondence> list = corRepository.findByInstitutionAndDateBetween(institutionRepository.findById(Integer.valueOf(id)).get(),LocalDate.parse(startDate), LocalDate.parse(endDate));
+		 model.addAttribute("allCorrespondence", list);
+		 model.addAttribute("institution", institutionRepository.findAll());
+		 return "allCorrespondence";
 	}
 	
 	
