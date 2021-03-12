@@ -191,7 +191,7 @@ public class DocumentsController {
 	public String findAllInvoices(Model model) {
 		
 		model.addAttribute("invoices", invoiceRepository.findAll());
-		
+		model.addAttribute("companies", companyRepository.findAll());
 		return "allInvoices";
 	}
 	

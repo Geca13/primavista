@@ -17,5 +17,7 @@ public interface BillReceiptRepository extends JpaRepository<BillReceipt, Intege
 	List<BillReceipt> findByDateBetween(LocalDate startDate , LocalDate endDate);
 	
 	List<BillReceipt> findByCompany(Company company);
+	
+	List<BillReceipt> findAllByOrderByDateAsc();
 
 }
