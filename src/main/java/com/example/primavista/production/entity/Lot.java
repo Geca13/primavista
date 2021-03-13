@@ -1,6 +1,8 @@
 package com.example.primavista.production.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,4 +32,7 @@ public class Lot {
 	
 	@ManyToOne
 	private Cut cut;
+	
+	@Enumerated(EnumType.STRING)
+	private Size size;
 }

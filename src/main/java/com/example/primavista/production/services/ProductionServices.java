@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.primavista.production.entity.Cut;
 import com.example.primavista.production.entity.Lot;
 import com.example.primavista.production.entity.Product;
+import com.example.primavista.production.entity.Size;
 import com.example.primavista.production.repository.CutRepository;
 import com.example.primavista.production.repository.LotRepository;
 import com.example.primavista.production.repository.OperationRepository;
@@ -35,19 +36,34 @@ public class ProductionServices {
 		
 	}
 	
-	public Cut createNewCut(Cut cut) {
-		cutRepository.save(cut);
-		for (int i = 1; i <= cut.getNumberOfLots(); i++) {
+	public Cut createNewCut(Cut cut,Integer id) {
+		
+		Product product = productRepository.findById(id).get();
+		Cut newCut = new Cut();
+		
+		newCut.setProduct(product);
+		newCut.setNumberOfLots(cut.getNumberOfLots());
+		newCut.setNumberOfSheets(cut.getNumberOfSheets());
+		cutRepository.save(newCut);
+		for (int i = 1; i <= newCut.getNumberOfLots(); i++) {
 			Lot lot =new Lot();
-			lot.setQty(cut.getNumberOfSheets());
-			lot.setProduct(cut.getProduct());
-			lot.setCut(cut);
-			List<Lot> lots = lotRepository.findAllByProduct(cut.getProduct());
+			lot.setQty(newCut.getNumberOfSheets());
+			lot.setProduct(newCut.getProduct());
+			lot.setCut(newCut);
+			List<Lot> lots = lotRepository.findAllByProduct(newCut.getProduct());
 			lot.setLid(lots.size()+1);
 			lotRepository.save(lot);
 		}
-		
-	return cutRepository.save(cut);
+	return cutRepository.save(newCut);
+	
+	}
+	
+	public void addSizes(Cut cut,Lot lot) {
+		List<Lot>lots = lotRepository.findAllByCut(cut);
+		for (Lot lot1 : lots) {
+			lot1.setSize(lot.getSize());
+			lotRepository.save(lot1);
+		}
 	}
 	
 	

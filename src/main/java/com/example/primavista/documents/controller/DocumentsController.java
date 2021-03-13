@@ -1,10 +1,7 @@
 package com.example.primavista.documents.controller;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Base64;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
