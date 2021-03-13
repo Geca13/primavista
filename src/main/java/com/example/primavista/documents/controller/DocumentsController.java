@@ -368,7 +368,7 @@ public class DocumentsController {
 		
 		model.addAttribute("file", file);
 		model.addAttribute("correspondence", new Correspondence());
-		model.addAttribute("institutions", institutionRepository.findAll());
+		
 		return "newCorrespondence";
 	}
 	
@@ -388,7 +388,7 @@ public class DocumentsController {
 	public String allCorrespondences(Model model) {
 		
 		model.addAttribute("allCorrespondence", corRepository.findAll());
-		
+		model.addAttribute("institutions", institutionRepository.findAll());
 		return "allCorrespondence";
 		
 	}

@@ -284,7 +284,7 @@ public class DocumentsByDatesController {
 			
 			List<Correspondence> list = corRepository.findByInstitutionAndDateBetween(institutionRepository.findById(Integer.valueOf(id)).get(),corRepository.findAllByOrderByDateAsc().get(0).getDate(), LocalDate.now());
 			model.addAttribute("allCorrespondence", list);
-			model.addAttribute("institution", institutionRepository.findAll());
+			model.addAttribute("institutions", institutionRepository.findAll());
 		    return "allCorrespondence";
 		}
 		//site vrati gi od -do PROVERENO
@@ -292,7 +292,7 @@ public class DocumentsByDatesController {
 		    
 			 List<Correspondence> list = corRepository.findByDateBetween(LocalDate.parse(startDate), LocalDate.parse(endDate));
 			 model.addAttribute("allCorrespondence", list);
-			 model.addAttribute("institution", institutionRepository.findAll());
+			 model.addAttribute("institutions", institutionRepository.findAll());
 			 return "allCorrespondence";
 		 }
 		 //site od pocetok do opredelena data PROVERENO
@@ -300,7 +300,7 @@ public class DocumentsByDatesController {
 			 
              List<Correspondence> list = corRepository.findByDateBetween(corRepository.findAllByOrderByDateAsc().get(0).getDate(), LocalDate.parse(endDate));
 			 model.addAttribute("allCorrespondence", list);
-			 model.addAttribute("institution", institutionRepository.findAll());
+			 model.addAttribute("institutions", institutionRepository.findAll());
 			 return "allCorrespondence";
 		 }
 		 //site od data do denes PROVERENO
@@ -308,27 +308,27 @@ public class DocumentsByDatesController {
 		    
 			 List<Correspondence> list = corRepository.findByDateBetween(LocalDate.parse(startDate), LocalDate.now());
 			 model.addAttribute("allCorrespondence", list);
-			 model.addAttribute("institution", institutionRepository.findAll());
+			 model.addAttribute("institutions", institutionRepository.findAll());
 			 return "allCorrespondence";
 		 }
 		 //site po kompanija od data do denes PROVERENO
 		 if(!id.equals("") && !startDate.isEmpty() && endDate.isEmpty()) {
 			 List<Correspondence> list = corRepository.findByInstitutionAndDateBetween(institutionRepository.findById(Integer.valueOf(id)).get(),LocalDate.parse(startDate), LocalDate.now());
 			 model.addAttribute("allCorrespondence", list);
-			 model.addAttribute("institution", institutionRepository.findAll());
+			 model.addAttribute("institutions", institutionRepository.findAll());
 			 return "allCorrespondence";
 		 }
 		 //site po kompanija od pocetna data do opredelena data PROVERENO
 		 if(!id.equals("") && startDate.isEmpty() && !endDate.isEmpty()) {
 			 List<Correspondence> list = corRepository.findByInstitutionAndDateBetween(institutionRepository.findById(Integer.valueOf(id)).get(),corRepository.findAllByOrderByDateAsc().get(0).getDate(), LocalDate.parse(endDate));
 			 model.addAttribute("allCorrespondence", list);
-			 model.addAttribute("institution", institutionRepository.findAll());
+			 model.addAttribute("institutions", institutionRepository.findAll());
 			 return "allCorrespondence";
 		 }
 		 //rezultati so site parametri PROVERENO
 		 List<Correspondence> list = corRepository.findByInstitutionAndDateBetween(institutionRepository.findById(Integer.valueOf(id)).get(),LocalDate.parse(startDate), LocalDate.parse(endDate));
 		 model.addAttribute("allCorrespondence", list);
-		 model.addAttribute("institution", institutionRepository.findAll());
+		 model.addAttribute("institutions", institutionRepository.findAll());
 		 return "allCorrespondence";
 	}
 	
