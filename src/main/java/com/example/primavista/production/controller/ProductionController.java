@@ -117,12 +117,14 @@ public class ProductionController {
 	
    @PostMapping("/addSizes/{id}")
 	
-	public String addSizesForm(Model model,@PathVariable("id")Integer id,@ModelAttribute("lot")Lot lot) {
+	public String addSizesForm(Model model,@PathVariable("id")Integer id,@ModelAttribute("lot")Lot lot,Size size) {
 	Cut cut = cutRepository.findById(id).get();
-	List<Lot>lots = lotRepository.findAllByCut(cut);
+	List<Lot>lots = lotRepository.findAllByCutAndSize(cut, null);
 	for (Lot lot1 : lots) {
-		lot1.setSize(lot.getSize());
-		lotRepository.save(lot1);
+		Lot lot2 = lotRepository.findById(lot1.getId()).get();
+		lot2.setSize(lot.getSize());
+		lotRepository.save(lot2);
+		return "redirect:/addSizes/"+cut.getId();
 	}
 		
 		return "redirect:/";

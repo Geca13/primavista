@@ -58,6 +58,7 @@ public class ProductionServices {
 	
 	}
 	
+	
 	public void addSizes(Cut cut,Lot lot) {
 		List<Lot>lots = lotRepository.findAllByCut(cut);
 		for (Lot lot1 : lots) {
