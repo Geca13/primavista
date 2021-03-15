@@ -10,5 +10,6 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
 
 	Company findByCompanyName(String companyName);
 	
+	Boolean existsByCompanyNameIgnoreCase(String companyName);
 	
 }

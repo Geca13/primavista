@@ -201,43 +201,10 @@ public class DocumentsController {
 		return "allInvoices";
 	}
 	
-	@GetMapping("/invoicesByInType/{id}")
-	public String findAllInvoicesByCompanyAndType(Model model, @PathVariable("id") Integer id) {
-		
-		model.addAttribute("invoices", invoiceRepository.findByCompanyIdAndInvoiceType(id,Type.INCOMMING ));
-		
-		return "allInvoices";
-	}
-	
-	@GetMapping("/invoicesByOutType/{id}")
-	public String findAllInvoicesByCompanyAndOutType(Model model, @PathVariable("id") Integer id) {
-		
-		model.addAttribute("invoices", invoiceRepository.findByCompanyIdAndInvoiceType(id,Type.OUTGOING ));
-		
-		return "allInvoices";
-	}
-	
-	@GetMapping("/slipsByInType/{id}")
-	public String findAllSlipsByCompanyAndType(Model model, @PathVariable("id") Integer id) {
-		
-		model.addAttribute("slips", isRepository.findByCompanyIdAndInvoiceAndSlipType(id,null,Type.INCOMMING ));
-		
-		return "allSlips";
-	}
-	
-	@GetMapping("/slipsByOutType/{id}")
-	public String findAllSlipsByCompanyAndOutType(Model model, @PathVariable("id") Integer id) {
-		
-		model.addAttribute("slips", isRepository.findByCompanyIdAndInvoiceAndSlipType(id,null,Type.OUTGOING));
-		
-		return "allSlips";
-	}
-	
 	@GetMapping("/removeSlip/{id}/{sid}")
 	public String removeSlipFromInvoice(@PathVariable("id") Integer id,@PathVariable("sid")  Integer sid) {
 		
 		docServices.removeSlipFromInvoice(id, sid);
-		
 		return "redirect:/invoices/"+id;
 	}
 	
@@ -246,7 +213,6 @@ public class DocumentsController {
 		
 		InvoiceSlip slip = isRepository.findById(id).get();
 		isRepository.delete(slip);
-		
 		return "redirect:/allSlips";
 	}
 	
@@ -254,16 +220,13 @@ public class DocumentsController {
 	public String deleteTheInvoiceCompletelly(@PathVariable("id") Integer id) {
 		docServices.deleteInvoiceIncludingTheSlips(id);
 		return "redirect:/invoices";
-		
 	}
 	
 	@GetMapping("/deleteInvoiceKeepSlips/{id}")
 	public String deleteTheInvoicewithoutSlips(@PathVariable("id") Integer id) {
 		docServices.deleteInvoiceKeepTheSlips(id);
 		return "redirect:/invoices";
-		
 	}
-	
 	
 	@GetMapping("/changeInvoicePhoto/{id}")
 	public String getPhotoForm(Model model,@PathVariable("id") Integer id, MultipartFile file) {
@@ -336,6 +299,10 @@ public class DocumentsController {
 			return "redirect:/newReceipt?noCompanySelected";
 		}
 		
+		if(companyRepository.existsByCompanyNameIgnoreCase(newCompany)) {
+			return "redirect:/newReceipt?companyExists";
+		}
+		
 		try {
 			docServices.saveBillReceipt(receipt, file,oldCompany, newCompany);
 		} catch (YouMustEnterCompanyException e) {
@@ -365,6 +332,7 @@ public class DocumentsController {
 		
 		model.addAttribute("file", file);
 		model.addAttribute("correspondence", new Correspondence());
+		model.addAttribute("institutions", institutionRepository.findAll());
 		
 		return "newCorrespondence";
 	}
@@ -374,6 +342,9 @@ public class DocumentsController {
 		
 		if(oldInstitution.equals("") && newInstitution.equals("")) {
 			return "redirect:/newCorrespondence?noCompanySelected";
+		}
+		if(institutionRepository.existsByInstitutionNameIgnoreCase(newInstitution)) {
+			return "redirect:/newCorrespondence?institutionallreadiexists";
 		}
 		
 		docServices.saveNewCorrespondence(correspondence, file, oldInstitution, newInstitution);

@@ -9,5 +9,7 @@ import com.example.primavista.documents.entity.Institution;
 public interface InstitutionRepository extends JpaRepository<Institution, Integer> {
 	
 	Institution findByInstitutionName(String institutionName);
+	
+	Boolean existsByInstitutionNameIgnoreCase(String institutionName);
 
 }

@@ -18,6 +18,8 @@ public interface InvoiceSlipRepository extends JpaRepository<InvoiceSlip, Intege
 	
 	List<InvoiceSlip> findByCompanyIdAndInvoiceAndSlipType(Integer id, Invoice invoice, Type type);
 	
+	List<InvoiceSlip> findByCompanyIdAndInvoice(Integer id, Invoice invoice);
+	
 	List<InvoiceSlip> findAllByInvoice(Invoice invoice);
 	
     List<InvoiceSlip> findByCompanyAndIssuedBetween(Company company,LocalDate startDate , LocalDate endDate);

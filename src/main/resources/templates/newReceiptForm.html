@@ -24,6 +24,9 @@
 <div th:if="${param.noCompanySelected}">
       <div class="alert alert-info">You didn't enter company.</div>
      </div>
+     <div th:if="${param.companyExists}">
+      <div class="alert alert-info">The company name already exists, select it from the dropdown.</div>
+     </div>
 
  <form th:action="@{/newReceipt}" th:object="${receipt}" method="post" enctype="multipart/form-data">
     

@@ -24,10 +24,14 @@
 <div th:if="${param.noCompanySelected}">
       <div class="alert alert-info">You didn't enter Institution.</div>
      </div>
+     
+     <div th:if="${param.institutionallreadiexists}">
+      <div class="alert alert-info">The institution already exists you can select it from the dropdown.</div>
+     </div>
 
  <form th:action="@{/newCorrespondence}" th:object="${correspondence}" method="post" enctype="multipart/form-data">
     
-    <h2 style="margin-top:100px; margin-bottom:50px" >Invoice Information:</h2>
+    <h2 style="margin-top:100px; margin-bottom:50px" >New Correspondence:</h2>
     
     
   <div class="row">
@@ -36,7 +40,7 @@
      <div class="form-group">
     <label class="control-label" for="birthday">Archive Number</label>
    
-      <input type="text" th:field="*{archiveNumber}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="10000$">
+      <input type="text" th:field="*{archiveNumber}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="22/33">
   
   </div>
       
@@ -48,7 +52,7 @@
      <div class="form-group ">
       <label for="exampleFormControlSelect2">Select Institution:</label>
     <select class="form-control" th:name="oldInstitution"  id="exampleFormControlSelect2">
-        <option value=""></option>
+        <option value="">-Select-</option>
       <option th:each="institution : ${institutions}"
         th:value="${institution.institutionName}"
         th:text="${institution.institutionName}"/>
@@ -62,7 +66,7 @@
      <div class="form-group">
     <label class="control-label" for="birthday">Enter new Institution:</label>
    
-      <input type="text" th:name="newInstitution"  autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="10000$">
+      <input type="text" th:name="newInstitution"  autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="Institution...">
   
   </div>
       

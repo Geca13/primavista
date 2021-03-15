@@ -12,23 +12,31 @@
     </style>
 </head>
 
-<body>
+<body style="background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(168, 231, 199));">
 
-
+<div class= "container">
 
 <div th:if="${error != null}">
      <div class="alert alert-info">[[${error}]]</div>
     </div>
   
-  <h1>Invoices list</h1>
+  <h1> Set Lot Sizes</h1>
   
+  <br><br>
   
+  <th:block th:each="lot: ${lots}" >
   
-  <th:block th:each="lot: ${lots}">
-  
-    <form th:if="${lot.size eq null}" class="store-form" th:action="@{/addSizes/{id}(id=${cut.id})}" th:object="${lot}" method="post">
-      <div>
-      <p th:text="${lot.lid}"></p>
+    <form style=margin-top:50px; th:if="${lot.size eq null}" class="store-form" th:action="@{/addSizes/{id}(id=${cut.id})}" th:object="${lot}" method="post">
+      <div class="row">
+      <div class="col-sm">
+      
+      <div style="clear: both">
+    <h4 style="float: left ">Lot Id:</h4>
+    <h4 style="float: right " th:text="${lot.lid}">Heading 2</h4>
+</div>
+      
+      </div>
+      <div class="col-sm" >
         <select class="form-control" th:field="${lot.size}"  id="exampleFormControlSelect2"required>
     
       <option th:each="size : ${T(com.example.primavista.production.entity.Size).values()}"
@@ -37,7 +45,13 @@
             th:text="${size.displayValue}"/>
        </select>
        </div>
-        <button class="submit-button" type="submit">Modify</button>
+       <div class="col-sm" >
+            <button style=margin-left:50px;  type="submit" class="btn btn-success">Apply</button>
+
+    </div>
+       
+       </div>
+        
     </form>
 </th:block>
   
@@ -117,6 +131,8 @@
   </div>
 </form>
 -->
+
+</div>
 <script >
 const forms = document.querySelectorAll('.store-form');
 forms.forEach(form => {

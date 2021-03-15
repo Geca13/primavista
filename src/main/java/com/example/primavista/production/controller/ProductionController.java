@@ -54,7 +54,8 @@ public class ProductionController {
 	@PostMapping("/newProduct")
 	public String createNewProduct(@ModelAttribute("product")Product product) {
 		
-		proSevices.saveNewProduct(product);
+		product.setCompleted(false);
+		productRepository.save(product);
 		return "redirect:/";
 		
 	}
@@ -99,6 +100,8 @@ public class ProductionController {
 		
 	}
 	
+	
+	
 	@GetMapping("/addSizes/{id}")
 	
 	public String lotSizesForm(Model model,@PathVariable("id")Integer id) {
@@ -110,8 +113,7 @@ public class ProductionController {
 		}
 		model.addAttribute("lots",lots);
 		
-		
-		return "sizesForm";
+	    return "sizesForm";
 		
 	}
 	
@@ -120,15 +122,104 @@ public class ProductionController {
 	public String addSizesForm(Model model,@PathVariable("id")Integer id,@ModelAttribute("lot")Lot lot,Size size) {
 	Cut cut = cutRepository.findById(id).get();
 	List<Lot>lots = lotRepository.findAllByCutAndSize(cut, null);
-	for (Lot lot1 : lots) {
-		Lot lot2 = lotRepository.findById(lot1.getId()).get();
-		lot2.setSize(lot.getSize());
-		lotRepository.save(lot2);
+	
+		for (Lot lot1 : lots) {
+		lot1.setSize(lot.getSize());
+		lotRepository.save(lot1);
+		if(lots.indexOf(lot1) == lots.size()-1) {
+			return "redirect:/";
+		}
 		return "redirect:/addSizes/"+cut.getId();
 	}
-		
+	
 		return "redirect:/";
 	}
+   
+   @GetMapping("/cutsByProduct/{id}")
+   public String returnAllCutsByProduct(Model model,@PathVariable("id")Integer id) {
+	   model.addAttribute("product", productRepository.findById(id).get());
+	   model.addAttribute("cuts", cutRepository.findAllByProductId(id));
+	   return "cuts";
+   }
+   
+   @GetMapping("/updateCut/{id}")
+   public String getCutsUpdateForm(Model model, @PathVariable("id")Integer id) {
+	  
+	   model.addAttribute("cut", cutRepository.findById(id));
+	   
+	return "cutsUpdateForm";
+   }
+   
+   @GetMapping("/deleteCut/{id}")
+   public String deleteCut(Model model, @PathVariable("id")Integer id) {
+	  
+	  Cut cut = cutRepository.findById(id).get();
+	   List<Lot> lots = lotRepository.findAllByCut(cut);
+	   for (Lot lot : lots) {
+		lotRepository.delete(lot);
+	}
+	   Product product = cut.getProduct();
+	   cutRepository.delete(cut);
+			   
+	return "redirect:/cutsByProduct/"+product.getId();
+   }
+   
+   @PostMapping("/updateCut/{id}")
+   public String updateCut(@ModelAttribute("cut")Cut cut, @PathVariable("id")Integer id) {
+	   
+	   Cut cutForUpdate = cutRepository.findById(id).get();
+	   cutForUpdate.setNumberOfSheets(cut.getNumberOfSheets());
+	   cutForUpdate.setProduct(cut.getProduct());
+	   cutRepository.save(cutForUpdate);
+	   List<Lot> lots = lotRepository.findAllByCut(cutForUpdate);
+	   for (Lot lot : lots) {
+		lot.setProduct(cutForUpdate.getProduct());
+		lot.setQty(cutForUpdate.getNumberOfSheets());
+		lotRepository.save(lot);
+	}
+	return "redirect:/cutsByProduct"+cutForUpdate.getProduct().getId();
+	   
+   }
+   
+   
+   @GetMapping("/lotsByProduct/{id}")
+   public String returnAllLotsByProduct(Model model,@PathVariable("id")Integer id) {
+	   model.addAttribute("product", productRepository.findById(id).get());
+	   model.addAttribute("lots", lotRepository.findAllByProductId(id));
+	   return "allLots";
+   }
+   
+   @GetMapping("/lotById/{id}")
+   public String returnLotsByIdForm(Model model,@PathVariable("id")Integer id) {
+	   model.addAttribute("lot", lotRepository.findById(id).get());
+	   
+	   return "lotUpdateForm";
+   }
+   
+   @PostMapping("/lotById/{id}")
+   public String saveLotByIdForm(Model model,@PathVariable("id")Integer id,@ModelAttribute("lot") Lot lot) {
+	   
+	   lotRepository.save(lot);
+	   
+	   return "redirect:/lotsByProduct/"+lot.getProduct().getId();
+   }
+   
+   @GetMapping("/deleteLot/{id}")
+   public String deleteLotById(Model model,@PathVariable("id")Integer id) {
+	   
+	   Lot lot = lotRepository.findById(id).get();
+	   
+	   Cut cut = lot.getCut();
+	   cut.setNumberOfLots(cut.getNumberOfLots()-1);
+	   
+	   cutRepository.save(cut);
+	   lotRepository.delete(lot);
+	   if(cut.getNumberOfLots()==0) {
+		   cutRepository.delete(cut);
+	   }
+	   return "redirect:/lotsByProduct/"+lot.getProduct().getId();
+   }
+   
 	
 	
 

@@ -15,8 +15,14 @@ public interface LotRepository extends JpaRepository<Lot, Integer> {
 
 	List<Lot> findAllByProduct(Product product);
 	
+	List<Lot> findAllByProductId(Integer id);
+	
+	List<Lot> findAllByCutId(Integer id);
+	
 	List<Lot> findAllByCut(Cut cut);
 	
 	List<Lot> findAllByCutAndSize(Cut cut, Size size);
+	
+	
 	
 }
