@@ -1,19 +1,12 @@
 package com.example.primavista.production.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.example.primavista.production.entity.Cut;
-import com.example.primavista.production.entity.Lot;
 import com.example.primavista.production.entity.Product;
-import com.example.primavista.production.entity.Size;
 import com.example.primavista.production.repository.CutRepository;
 import com.example.primavista.production.repository.LotRepository;
 import com.example.primavista.production.repository.OperationRepository;
 import com.example.primavista.production.repository.ProductRepository;
-
 
 @Service
 public class ProductionServices {
@@ -33,10 +26,7 @@ public class ProductionServices {
 	public Product saveNewProduct(Product product) {
 		product.setCompleted(false);
 		return productRepository.save(product);
-		
 	}
-	
-	
 	
 	}
 	
