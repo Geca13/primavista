@@ -70,13 +70,50 @@ public class ProductionController {
 			oper.setProduct(newProduct);
 			poRepository.save(oper);
 		}
-		return "redirect:/";
+		return "redirect:/addValues/"+newProduct.getId();
 	}
+	
+	
+	@GetMapping("/addValues/{id}")
+	public String operationsValuesForm(Model model,@PathVariable("id")Integer id) {
+		Product product = productRepository.findById(id).get();
+		model.addAttribute("product",product);
+		List<ProductOpers> operations = poRepository.findAllByProduct(product);
+		for (ProductOpers operation : operations) {
+			model.addAttribute("operation",operation);
+		}
+		model.addAttribute("operations",operations);
+		
+	    return "setValuesOnOperationsPage";
+	}
+	
+   @PostMapping("/addValues/{id}")
+	public String addValuesForm(Model model,@PathVariable("id")Integer id,@ModelAttribute("operation")ProductOpers operation) {
+	   Product product = productRepository.findById(id).get();
+	   List<ProductOpers> operations = poRepository.findAllByProductAndOperationValue(product, null);
+	
+	   for (ProductOpers operation1 : operations) {
+		   operation1.setOperationValue(operation.getOperationValue());
+		   poRepository.save(operation1);
+		if(operations.indexOf(operation1) == operations.size()-1) {
+			return "redirect:/";
+		}
+		return "redirect:/addValues/"+product.getId();
+	}
+	    return "redirect:/";
+	}
+   
+   
 	
 	@GetMapping("/allProducts")
 	public String getAllProducts(Model model) {
+		List<Product> products = productRepository.findAll();
+		model.addAttribute("products", products);
+		for (Product product : products) {
+			List<ProductOpers> operations = poRepository.findAllByProductId(product.getId());
+			model.addAttribute("operations", operations);
+		}
 		
-		model.addAttribute("products", productRepository.findAll());
 		return "allProducts";
 	}
 	

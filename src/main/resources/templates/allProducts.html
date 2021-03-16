@@ -100,9 +100,9 @@
      </tr>
   </thead>
   <tbody>
-    <tr th:each="operation : ${product.operations}">
-      <td th:text="${operation.id}"></td>
-      <td th:text="${operation.description}"></td> 
+    <tr th:each="operation : ${operations}">
+      <td th:text="${operation.operation.id}"></td>
+      <td th:text="${operation.operation.description}"></td> 
       
       
     </tr>

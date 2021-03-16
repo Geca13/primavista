@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <style>
+    </style>
+</head>
+
+<body style="background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(168, 231, 199));">
+
+<div class= "container">
+
+<div th:if="${error != null}">
+     <div class="alert alert-info">[[${error}]]</div>
+    </div>
+  
+  <h1> Set Values on operations</h1>
+  
+  <br><br>
+  
+  <th:block th:each="lot: ${operations}" >
+  
+    <form style=margin-top:50px; th:if="${lot.operationValue eq null}" class="store-form" th:action="@{/addValues/{id}(id=${product.id})}" th:object="${operation}" method="post">
+      <div class="row">
+      <div class="col-sm">
+      
+      <div style="clear: both">
+    <h4 style="float: left "></h4>
+    <h4 style="float: right " th:text="${lot.operation.description}"></h4>
+</div>
+      
+      </div>
+      <div class="col-sm" >
+       <input type="text" th:field="*{operationValue}" required autofocus="autofocus" class="form-control" id="inputFirstName" placeholder="2.00mkd" >
+
+       </div>
+       <div class="col-sm" >
+            <button style=margin-left:50px;  type="submit" class="btn btn-success">Apply</button>
+
+    </div>
+       
+       </div>
+        
+    </form>
+</th:block>
+  
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>
