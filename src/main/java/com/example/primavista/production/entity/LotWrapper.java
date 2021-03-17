@@ -4,18 +4,18 @@ import java.util.List;
 
 public class LotWrapper {
 
-	List<Lot> lots;
+	List<ProductOpers> lots;
 
-	public LotWrapper(List<Lot> lots) {
+	public LotWrapper(List<ProductOpers> lots) {
 		super();
 		this.lots = lots;
 	}
 
-	public List<Lot> getLots() {
+	public List<ProductOpers> getLots() {
 		return lots;
 	}
 
-	public void setLots(List<Lot> lots) {
+	public void setLots(List<ProductOpers> lots) {
 		this.lots = lots;
 	}
 }

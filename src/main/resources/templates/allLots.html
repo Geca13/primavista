@@ -38,8 +38,8 @@
       
       <th scope="col"> Lot Id</th>
       <th scope="col"> Qty</th>
+      <th scope="col"> Size</th>
       <th scope="col"> Product</th>
-      
       <th scope="col"> Action</th>
      
       
@@ -49,11 +49,10 @@
     <tr th:each="lot: ${lots}" >
       <td th:text="${lot.lid}"></td> 
       <td th:text="${lot.qty}"></td>
+      <td th:text="${lot.size}"></td>
       <td th:text="${lot.product.description}"></td>
       
-      
-      
-      <td>
+       <td>
        <a th:href="@{/lotById/{id}(id=${lot?.id})}" class="btn btn-outline-danger">Update</a> 
        <a th:href="@{/deleteLot/{id}(id=${lot?.id})}" class="btn btn-outline-danger">Delete</a>
       </td>

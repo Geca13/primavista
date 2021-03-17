@@ -100,23 +100,25 @@
      </tr>
   </thead>
   <tbody>
-    <tr th:each="operation : ${operations}">
-      <td th:text="${operation.operation.id}"></td>
-      <td th:text="${operation.operation.description}"></td> 
+    <tr th:each="operation : ${product.operations}">
+      <td th:text="${operation.id}"></td>
+      <td th:text="${operation.description}"></td> 
+      <td><a th:href="@{/addNewOperToProd/{id}(id=${product.id})}" class="btn btn-outline-danger">Add</a></td> 
+      
       
       
     </tr>
     
   </tbody>
 </table>
-     <h6>Invoice Total:</h6>
+     
     
       </td>
       <td>
-              <a th:href="@{/newCut/{id}(id=${product.id})}" class="btn btn-outline-danger">New Cut</a> 
-              <a th:href="@{/cutsByProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Cuts</a> 
-              <a th:href="@{/lotsByProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Lots</a> 
-       
+              <a th:href="@{/newCut/{id}(id=${product.id})}" class="btn btn-outline-danger">New Cut</a> <br><br>
+              <a th:href="@{/cutsByProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Cuts</a> <br><br>
+              <a th:href="@{/lotsByProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Lots</a> <br><br>
+              <a th:href="@{/updateValues/{id}(id=${product.id})}" class="btn btn-outline-danger">Op. Values</a>
       </td>
     </tr>
  </tbody>
