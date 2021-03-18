@@ -1,9 +1,8 @@
 package com.example.primavista.production.controller;
 
 import java.util.List;
-
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -157,24 +156,32 @@ public class ProductionController {
 			}
 		}
             
-		return "addNewOperationToProduct";
+		return "newProductForm";
 	}
 	
-	@GetMapping("/addNewOperToProd/{id}/{oid}")
-	public String addNewOperationToProduct(Model model,@PathVariable("id")Integer id,@PathVariable("oid")Integer oid, @Param(value="value")Double value) {
+	@PostMapping("/addNewOperToProd/{id}")
+	@Transactional
+	public String addNewOperationToProduct(Model model,@PathVariable("id")Integer id,@ModelAttribute("product")Product product) {
 		
-		Product product = productRepository.findById(id).get();
-		Operation operation1 = operationRepository.findById(oid).get();
-		ProductOpers newPO = new ProductOpers();
-		newPO.setProduct(product);
-		newPO.setOperation(operation1);
-		newPO.setOperationValue(value);
-		poRepository.save(newPO);
-		product.getOperations().add(operation1);
-		productRepository.save(product);
-		
-		return "redirect:/addNewOperToProd/"+product.getId();
-		
+		Product product1 = productRepository.findById(id).get();
+		List<Operation> ops = product1.getOperations();
+		product1.setOperations(product.getOperations());
+		productRepository.save(product1);
+        for (Operation operation : product1.getOperations()) {
+	      if(!poRepository.existsByOperationAndProduct(operation,product1)) {
+	    	  ProductOpers newPO = new ProductOpers();
+	    	  newPO.setProduct(product1);
+	  		  newPO.setOperation(operation);
+	  		  poRepository.save(newPO);
+        }
+	      
+    }
+        for (Operation operation : ops) {
+			product1.getOperations().add(operation);
+			productRepository.save(product1);
+
+		}
+        return "redirect:/addValues/"+product1.getId();
 	}
 	
 	@GetMapping("/newCut/{id}")
@@ -324,7 +331,4 @@ public class ProductionController {
 	   return "redirect:/lotsByProduct/"+lot.getProduct().getId();
    }
    
-	
-	
-
 }

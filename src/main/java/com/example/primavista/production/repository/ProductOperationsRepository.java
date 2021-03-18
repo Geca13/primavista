@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.example.primavista.production.entity.Operation;
 import com.example.primavista.production.entity.Product;
 import com.example.primavista.production.entity.ProductOpers;
 
@@ -16,4 +17,6 @@ public interface ProductOperationsRepository extends JpaRepository<ProductOpers,
 	List<ProductOpers> findAllByProductAndOperationValue(Product product, Double value);
 
 	Boolean existsByProduct(Product product);
+	
+	Boolean existsByOperationAndProduct(Operation operation,Product product);
 }

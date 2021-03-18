@@ -26,7 +26,7 @@
 
 
 <div class="container">
- <form th:action="@{/newProduct}" th:object="${product}" method="post">
+ <form th:if="${product.id eq null}" th:action="@{/newProduct}" th:object="${product}" method="post">
     
     
     
@@ -38,7 +38,7 @@
     
     
     <div class="row" style=margin-top:50px;>
-    <div class="col">
+    <div th:if="${product.id eq null}"class="col">
       
      <div class="form-group">
     <label class="control-label" for="birthday">Product Description:</label>
@@ -50,8 +50,7 @@
       
     </div>
     
-    <div class="col">
-     
+    <div th:if="${product.id eq null}"class="col">     
      <div class="form-group ">
       <label for="exampleFormControlSelect2">Select Company:</label>
     <select class="form-control" th:field="*{company}"  id="exampleFormControlSelect2" required >
@@ -79,6 +78,57 @@
     </div>
     
   </div>
+    
+    
+
+
+
+<div style=margin-top:40px;margin-left:95px; class="form-group">
+      <button type="submit" class="btn btn-success">Create</button>
+      
+    </div>
+   <br>
+ 
+  </form>
+  
+  <form th:unless="${product.id eq null}"  th:action="@{/addNewOperToProd/{id}(id=${product.id})}" th:object="${product}" method="post">
+    
+    
+    
+    <h2 style=margin-top:50px;>Product Information</h2>
+    <br>
+    
+    
+    
+    
+    
+    <div class="row" style=margin-top:50px;>
+   
+  </div>
+      
+      
+    
+    
+    <div class="col">     
+     <label for="exampleFormControlSelect2">Select Operations:</label>
+     <div class="form-group">
+    <ul>
+        <li th:each="operation : ${operations}"><input type="checkbox"
+                th:field="*{operations}" th:value="${operation.id}"   /> <label
+                th:text="${operation.description}"></label></li>
+</ul>
+  
+  </div>
+     
+    </div>
+    
+    <div class="col">
+     
+      
+      
+    </div>
+    
+  
     
     
 
