@@ -74,7 +74,6 @@ public class ProductionController {
 		return "redirect:/addValues/"+newProduct.getId();
 	}
 	
-	
 	@GetMapping("/addValues/{id}")
 	public String operationsValuesForm(Model model,@PathVariable("id")Integer id) {
 		Product product = productRepository.findById(id).get();
@@ -112,37 +111,36 @@ public class ProductionController {
 		for (Product product : products) {
 			model.addAttribute("product", product);
 
-			List<ProductOpers> operations = poRepository.findAllByProductId(product.getId());
-			model.addAttribute("operations", operations);
 		}
-		
 		return "allProducts";
 	}
 	
-	@GetMapping("/updateValues/{id}")
-	public String updateOperationsValuesForm(Model model,@PathVariable("id")Integer id) {
+	@GetMapping("/productOperationsValues/{id}")
+	public String getOperationsValuesPage(Model model,@PathVariable("id")Integer id) {
 		
 		Product product = productRepository.findById(id).get();
 		model.addAttribute("product", product);
 		List<ProductOpers> operations = poRepository.findAllByProductId(product.getId());
-		for (ProductOpers operation : operations) {
-			model.addAttribute("operation",operation);
-		}
 		model.addAttribute("operations", operations);
-		
-		return "updateOperationsValues";
+		  return "productOperationsValues";
 	}
 	
-	@PostMapping("/updateValues/{id}")
+	@GetMapping("/updateProductOperationValues/{id}")
+	public String updateOperationsValuesForm(Model model,@PathVariable("id")Integer id) {
+		
+		ProductOpers operation = poRepository.findById(id).get();
+		model.addAttribute("operation", operation);
+		  return "updateOperationsValues";
+	}
+	
+	@PostMapping("/updateProductOperationValues/{id}")
 	public String completeUpdateValues(@PathVariable("id")Integer id,@ModelAttribute("operation")ProductOpers operation) {
 		
 		ProductOpers oper = poRepository.findById(id).get();
 		oper.setOperationValue(operation.getOperationValue());
 		poRepository.save(oper);
 		Product product = oper.getProduct();
-		
-		return "redirect:/updateValues/" + product.getId();
-		
+		  return "redirect:/productOperationsValues/" + product.getId();
 	}
 	
 	@GetMapping("/addNewOperToProd/{id}")
@@ -151,17 +149,19 @@ public class ProductionController {
 		Product product = productRepository.findById(id).get();
 		model.addAttribute("product", product);
 		List<Operation> operations = operationRepository.findAll();
-		for (Operation operation : operations) {
-			model.addAttribute("operation", operation);
+		List<ProductOpers> list = poRepository.findAllByProduct(product);
+		for (ProductOpers productOpers : list) {
+			if(poRepository.existsByProduct(product)) {
+				operations.remove(productOpers.getOperation());
+				model.addAttribute("operations", operations);
+			}
 		}
-
-		model.addAttribute("operations", operations);
-		
+            
 		return "addNewOperationToProduct";
 	}
 	
-	@PostMapping("/addNewOperToProd/{id}/{oid}")
-	public String addNewOperationToProduct(Model model,@PathVariable("id")Integer id,@PathVariable("oid")Integer oid, @ModelAttribute("operation")Operation operation,@Param("value")Double value) {
+	@GetMapping("/addNewOperToProd/{id}/{oid}")
+	public String addNewOperationToProduct(Model model,@PathVariable("id")Integer id,@PathVariable("oid")Integer oid, @Param(value="value")Double value) {
 		
 		Product product = productRepository.findById(id).get();
 		Operation operation1 = operationRepository.findById(oid).get();

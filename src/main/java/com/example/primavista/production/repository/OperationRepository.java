@@ -7,5 +7,6 @@ import com.example.primavista.production.entity.Operation;
 
 @Repository
 public interface OperationRepository extends JpaRepository<Operation, Integer> {
+	
 
 }

@@ -103,23 +103,18 @@
     <tr th:each="operation : ${product.operations}">
       <td th:text="${operation.id}"></td>
       <td th:text="${operation.description}"></td> 
-    
-      
-      
-      
-    </tr>
+     </tr>
     
   </tbody>
 </table>
      
-    
-      </td>
+    </td>
       <td>
               <a th:href="@{/addNewOperToProd/{id}(id=${product.id})}" class="btn btn-outline-danger">New operation</a> <br><br>
               <a th:href="@{/newCut/{id}(id=${product.id})}" class="btn btn-outline-danger">New Cut</a> <br><br>
               <a th:href="@{/cutsByProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Cuts</a> <br><br>
               <a th:href="@{/lotsByProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Lots</a> <br><br>
-              <a th:href="@{/updateValues/{id}(id=${product.id})}" class="btn btn-outline-danger">Op. Values</a>
+              <a th:href="@{/productOperationsValues/{id}(id=${product.id})}" class="btn btn-outline-danger">Operations</a>
       </td>
     </tr>
  </tbody>

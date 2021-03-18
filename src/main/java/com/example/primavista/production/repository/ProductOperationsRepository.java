@@ -15,4 +15,5 @@ public interface ProductOperationsRepository extends JpaRepository<ProductOpers,
 	
 	List<ProductOpers> findAllByProductAndOperationValue(Product product, Double value);
 
+	Boolean existsByProduct(Product product);
 }

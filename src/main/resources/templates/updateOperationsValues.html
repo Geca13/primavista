@@ -24,15 +24,15 @@
   
   <br><br>
   
-  <th:block th:each="lot: ${operations}" >
   
-    <form style=margin-top:50px;  class="store-form" th:action="@{/updateValues/{id}(id=${product.id})}" th:object="${operation}" method="post">
+  
+    <form style=margin-top:50px;  class="store-form" th:action="@{/updateProductOperationValues/{id}(id=${operation.id})}" th:object="${operation}" method="post">
       <div class="row">
       <div class="col-sm">
       
       <div style="clear: both">
-    <h4 style="float: right " th:text="${lot.operationValue}"></h4>
-    <h4 style="float: left " th:text="${lot.operation.description}"></h4>
+    <h4 style="float: right " th:text="*{operation.id + ' '+operation.description +' ' + operationValue}" th:field="*{operation}"></h4>
+    
 </div>
       
       </div>
@@ -48,7 +48,7 @@
        </div>
         
     </form>
-</th:block>
+
   
 
 </div>
