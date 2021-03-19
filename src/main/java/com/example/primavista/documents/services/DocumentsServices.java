@@ -76,10 +76,24 @@ public class DocumentsServices {
 		newSlip.setCompany(company);
 		if(company.getCompanyName().equalsIgnoreCase("PrimaVista")) {
 			newSlip.setSlipType(Type.OUTGOING);
-		}else {
-			newSlip.setSlipType(Type.INCOMMING);
+			newSlip.setIssued(slip.getIssued());
+			newSlip.setSlipNumber(slip.getSlipNumber());
+			newSlip.setCompanyOut(slip.getCompanyOut());
+			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		       if(fileName.contains("..")) {
+		       	System.out.println("not a valid file");
+		        }
+			  try {
+				  newSlip.setSlipImage(Base64.getEncoder().encodeToString(file.getBytes()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			  return slipRepository.save(newSlip);
 		}
 		
+		newSlip.setCompanyOut(companyRepository.findByCompanyName("PrimaVista"));
+		newSlip.setSlipType(Type.INCOMMING);
 		newSlip.setIssued(slip.getIssued());
 		newSlip.setSlipNumber(slip.getSlipNumber());
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());

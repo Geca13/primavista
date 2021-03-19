@@ -163,13 +163,30 @@ public class DocumentsController {
 		
 		if(company.getCompanyName().equalsIgnoreCase("PrimaVista")) {
 			newInvoice.setInvoiceType(Type.OUTGOING);
-		}else {
-			newInvoice.setInvoiceType(Type.INCOMMING);
+			newInvoice.setIssued(invoice.getIssued());
+			newInvoice.setArrival(invoice.getArrival());
+			newInvoice.setCompany(company);
+			newInvoice.setCompanyOut(invoice.getCompanyOut());
+			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		       if(fileName.contains("..")) {
+		       	System.out.println("not a valid file");
+		        }
+			  try {
+				  newInvoice.setInvoiceImage(Base64.getEncoder().encodeToString(file.getBytes()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			  invoiceRepository.save(newInvoice);
+			
+			return "redirect:/allunpaidSlips/"+newInvoice.getId();
 		}
 		
+		newInvoice.setInvoiceType(Type.INCOMMING);
 		newInvoice.setIssued(invoice.getIssued());
 		newInvoice.setArrival(invoice.getArrival());
 		newInvoice.setCompany(company);
+		newInvoice.setCompanyOut(companyRepository.findByCompanyName("PrimaVista"));
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 	       if(fileName.contains("..")) {
 	       	System.out.println("not a valid file");

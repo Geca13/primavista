@@ -34,6 +34,9 @@ public class InvoiceSlip {
 	@ManyToOne
 	private Company company;
 	
+	@ManyToOne
+	private Company companyOut;
+	
 	private String slipNumber;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
