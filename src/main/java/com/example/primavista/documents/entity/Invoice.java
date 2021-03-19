@@ -37,6 +37,8 @@ public class Invoice {
 	@ManyToOne
 	private Company company;
 	
+	private String companyOut;
+	
 	private String invoiceNumber;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
