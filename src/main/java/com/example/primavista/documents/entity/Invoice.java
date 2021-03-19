@@ -37,7 +37,8 @@ public class Invoice {
 	@ManyToOne
 	private Company company;
 	
-	private String companyOut;
+	@ManyToOne
+	private Company companyOut;
 	
 	private String invoiceNumber;
 	
