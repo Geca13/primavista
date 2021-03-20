@@ -2,6 +2,8 @@ package com.example.primavista.documents.controller;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -100,6 +102,10 @@ public class DocumentsController {
 	@GetMapping("/newSlip/{id}")
 	public String newInvoiceSlip(Model model,@PathVariable("id") Integer id,MultipartFile file) {
 		
+		
+		List<Company> companies = companyRepository.findAll();
+		companies.remove(companyRepository.findByCompanyName("PrimaVista"));
+		model.addAttribute("companies", companies);
 		model.addAttribute("company", companyRepository.findById(id).get());
 		model.addAttribute("slip", new InvoiceSlip());
 		model.addAttribute("file", file);
@@ -126,7 +132,7 @@ public class DocumentsController {
 	@GetMapping("/allunpaidSlips/{id}")
 	public String getAllByCompanyWithoutInvoice(Model model,@PathVariable("id") Integer id ) {
 		Invoice invoice = invoiceRepository.findById(id).get();
-		model.addAttribute("slips", isRepository.findByCompanyAndInvoice(invoice.getCompany(), null));
+		model.addAttribute("slips", isRepository.findByCompanyAndCompanyOutAndInvoice(invoice.getCompany(),invoice.getCompanyOut(), null));
 		model.addAttribute("invoice", invoice);
 		return "allSlips";
 	}
@@ -145,8 +151,11 @@ public class DocumentsController {
 	@GetMapping("/createInvoice/{id}")
 	public String getNewInvoiceForm(Model model,@PathVariable("id") Integer id,MultipartFile file ) {
 		
-		Company company = companyRepository.findById(id).get();
-		model.addAttribute("company", company);
+		List<Company> companies = companyRepository.findAll();
+		companies.remove(companyRepository.findByCompanyName("PrimaVista"));
+		model.addAttribute("companies", companies);
+		model.addAttribute("companies", companyRepository.findAll());
+		model.addAttribute("company", companyRepository.findById(id).get());
 		model.addAttribute("invoice", new Invoice());
 		model.addAttribute("file", file);
 		

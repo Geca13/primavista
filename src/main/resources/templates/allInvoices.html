@@ -79,6 +79,8 @@
       
       <th scope="col">Account No </th>
       
+      <th scope="col">IN/OUT </th>
+      
       <th scope="col">Issued</th>
       
       <th scope="col">Arrival</th>
@@ -94,6 +96,7 @@
       <td th:text="${invoice.invoiceNumber}"></td>
       <td th:text="${invoice.company?.companyName}"></td>
       <td th:text="${invoice.company.accountNumber}"></td>
+      <td th:text="${invoice.invoiceType}"></td>
       <td th:text="${#temporals.format(invoice.issued, 'yyyy-MM-dd')}"></td> 
       <td th:text="${#temporals.format(invoice.arrival, 'yyyy-MM-dd')}"></td> 
       <td> <img th:src="*{'data:image/png;base64,'+{invoice.invoiceImage}}" style="width:150px"><a th:href="@{/changeInvoicePhoto/{id}(id=${invoice.id})}" >Update</a> <br></td>  

@@ -14,7 +14,7 @@ import com.example.primavista.documents.entity.Type;
 @Repository
 public interface InvoiceSlipRepository extends JpaRepository<InvoiceSlip, Integer> {
 	
-	List<InvoiceSlip> findByCompanyAndInvoice(Company company, Invoice invoice);
+	List<InvoiceSlip> findByCompanyAndCompanyOutAndInvoice(Company company,Company companyOut, Invoice invoice);
 	
 	List<InvoiceSlip> findByCompanyIdAndInvoiceAndSlipType(Integer id, Invoice invoice, Type type);
 	

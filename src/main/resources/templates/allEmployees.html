@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <style>
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+            <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Me
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-item nav-link"  th:href="@{/profile}" sec:authentication="principal.username"> Welcome <span >User</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+                    </div>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
+               </div>
+                </li>
+                
+               </ul>
+        </div>
+ </nav>
+  
+  <h1>User list</h1>
+  <form th:action="@{/users}">
+  
+  <input type="hidden" name="sortField" th:value="${sortField}" />
+  <input type="hidden" name="sortDir" th:value="${sortDir}" />
+  
+  Filter: <input type="text" name="search" id="search" size="50"  required />
+    &nbsp;
+    <input type="submit" value="Search" />
+    &nbsp;
+     <a th:href="@{/users}">Clear</a>
+
+<br> <br>
+  
+  <table class="table table-striped table-dark">
+  <thead>
+    <tr>
+      <th scope="col">
+     Id
+      </th>
+      <th scope="col">
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=lastName&sortDir=' + ${reverseSortDir}}">Last Name</a> 
+      </th>
+      <th scope="col">
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}">First Name</a>
+       </th>
+      
+      
+      <th scope="col">
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=emdr&sortDir=' + ${reverseSortDir}}">EMBR</a> 
+      </th>
+      
+      <th scope="col">
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=bankAccount&sortDir=' + ${reverseSortDir}}">Bank Account</a> 
+      </th>
+      
+      <th scope="col"> 
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=phoneNumber&sortDir=' + ${reverseSortDir}}">Phone Number</a>
+       </th>
+       <th scope="col"> 
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=bday&sortDir=' + ${reverseSortDir}}">BirthDate</a>
+       </th>
+       <th scope="col"> 
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=employeedFrom&sortDir=' + ${reverseSortDir}}">Employeed</a>
+       </th>
+       
+       <th scope="col"> 
+      
+       </th>
+      </tr>
+  </thead>
+  <tbody>
+    <tr th:each="employee : ${employees}">
+      <td th:text="${employee.id}"></td>
+      <td th:text="${employee.lastName}"></td>
+      <td th:text="${employee.firstName}"></td>
+      <td th:text="${employee.emdr}"></td>
+      <td th:text="${employee.bankAccount}"></td> 
+      <td th:text="${employee.phoneNumber}"></td>  
+      <td th:text="${#temporals.format(employee.bday, 'yyyy-MM-dd')}"></td> 
+      <td th:text="${#temporals.format(employee.employedFrom, 'yyyy-MM-dd')}"></td> 
+      <td>
+        <a th:href="@{/updateEmployee/{id}(id=${employee.id})}" class="btn btn-outline-success">UPDATE</a>
+        <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-outline-danger">DELETE</a>
+        <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-outline-success">PRODUCTIVITY</a>
+      <td>
+    </tr>
+   </tbody>
+</table>
+</form>
+ <div th:if = "${totalPages > 1}">
+ 
+    <div class = "row col-sm-10">
+     <div class = "row col-sm-2">
+     Total Rows: [[${totalItems}]]
+     </div>
+     
+     <div class = "row col-sm-2">
+        <a th:if="${currentPage > 1}" th:href="@{'/pages/' + ${currentPage - 1}+  '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${search != null ? '&search=' + search : ' ' }}">Previous</a>
+<span th:unless="${currentPage > 1}">Previous</span>
+</div>
+     <div class = "row col-sm-2">
+        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+           <a th:if="${currentPage != i}" th:href = "@{'/pages/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}+ ${search != null ? '&search=' + search : ' ' }}">[[${i}]]</a>
+           <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+        </span>
+     
+     </div>
+     
+     <div class = "row col-sm-2">
+     
+     <a th:if="${currentPage < totalPages}" th:href="@{'/pages/' + ${currentPage + 1}+  '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${search != null ? '&search=' + search : ' ' }}">Next</a>
+         <span th:unless="${currentPage < totalPages}">Next</span> &nbsp; &nbsp;
+     </div>
+     
+     
+    
+    <div class = "row col-sm-2">
+     
+     <a th:if="${currentPage < totalPages}" th:href="@{'/pages/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}+ ${search != null ? '&search=' + search : ' ' }}">Last</a>
+         <span th:unless="${currentPage < totalPages}">Last</span> &nbsp; &nbsp;
+     </div>
+    
+    </div>
+ 
+ </div >
+  
+  
+  </div>
+<div class="foot">
+   <div class="container">
+     <div class="row">
+       <div class="col-sm">
+         </div>
+           <div class="col-sm">
+             <h3>Gzikle's Shop powered by Marjan Geca Karafiloski . All right reserved 2020/2021</h3>
+           </div>
+          <div class="col-sm">
+         </div>
+        </div>
+      </div>
+      <br>
+    </div>
+ 
+ 
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>

@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,8 +29,10 @@ public class Employee {
 	
 	private String lastName;
 	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate bday;
 	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate employedFrom;
 	
 	private String emdr;

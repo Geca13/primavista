@@ -61,7 +61,7 @@
   </div>
   <div class="col">
     <div class="form-group">
-      <button style=margin-top:30px; type="submit" class="btn btn-success">Filter</button>
+      <button th:disabled = "${slips.isEmpty}" style=margin-top:30px; type="submit" class="btn btn-success">Filter</button>
       
     </div>
     
@@ -70,7 +70,8 @@
   <thead>
     <tr>
       <th scope="col">Id</th>
-      <th scope="col"> Company Name</th>
+      <th scope="col"> From </th>
+      <th scope="col"> To </th>
       <th scope="col"> SlipNo</th>
       <th scope="col"> Date</th>
       <th scope="col"> Invoice</th>
@@ -84,6 +85,7 @@
     <tr th:each="slip: ${slips}" >
       <td th:text="${slip.id}"></td> 
       <td th:text="${slip.company.companyName}"></td>
+      <td th:text="${slip.companyOut.companyName}"></td>
       <td th:text="${slip.slipNumber}"></td>
       <td th:text="${#temporals.format(slip.issued, 'yyyy-MM-dd')}"></td> 
       <td th:text="${slip.invoice?.id}"></td>
