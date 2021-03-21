@@ -42,7 +42,7 @@
       <td th:text="${operation.operationValue}"></td>
       <td>
        <a th:href="@{/updateProductOperationValues/{id}(id=${operation?.id})}" class="btn btn-outline-danger">Update</a> 
-       <a th:href="@{/deleteLot/{id}(id=${lot?.id})}" class="btn btn-outline-danger">Delete</a>
+       <a th:href="@{/addNewProductivity/{id}/{oid}(id=${product.id},oid=${operation.id})}" class="btn btn-outline-danger">Add Productivity</a>
       </td>
         
       </table>

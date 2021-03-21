@@ -16,47 +16,10 @@
 
 <div class="container">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-warning">
-        <a class="navbar-brand" href="#">DZIKLE'S EXPRESS</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto topnav">
-            <li class="nav-item dropdown active">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Me
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
-                        <div class="dropdown-divider"></div>
-                        <a class="nav-item nav-link"  th:href="@{/profile}" sec:authentication="principal.username"> Welcome <span >User</span></a>
-                        <div class="dropdown-divider"></div>
-                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
-                    </div>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
-                </li>
-                <li class="nav-item">
-                <div sec:authorize="hasRole('ROLE_ADMIN')">
-                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
-               </div>
-                </li>
-                
-               </ul>
-        </div>
- </nav>
   
-  <h1>User list</h1>
-  <form th:action="@{/users}">
+  <h1>Employees list</h1>
+  <form th:action="@{/employees}">
   
   <input type="hidden" name="sortField" th:value="${sortField}" />
   <input type="hidden" name="sortDir" th:value="${sortDir}" />
@@ -65,7 +28,7 @@
     &nbsp;
     <input type="submit" value="Search" />
     &nbsp;
-     <a th:href="@{/users}">Clear</a>
+     <a th:href="@{/employees}">Clear</a>
 
 <br> <br>
   
@@ -98,7 +61,7 @@
       <a th:href="@{'/pages/' + ${currentPage} + '?sortField=bday&sortDir=' + ${reverseSortDir}}">BirthDate</a>
        </th>
        <th scope="col"> 
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=employeedFrom&sortDir=' + ${reverseSortDir}}">Employeed</a>
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=employedFrom&sortDir=' + ${reverseSortDir}}">Employeed</a>
        </th>
        
        <th scope="col"> 
