@@ -88,13 +88,12 @@ public class ProductivityController {
 	Salary salary = salaryRepository.findByEmployeeAndMonthAndYear(employeeRepository.findById(id).get(), LocalDate.now().getMonth(),LocalDate.now().getYear());
 	List<Productivity> sorted = salary.getProductivities();
 	sorted.sort(Comparator.comparing(Productivity::getProductivityDate));
-	Map< String,Double> surveyMap = new LinkedHashMap<>();
+	Map< LocalDate,Double> surveyMap = new LinkedHashMap<>();
 	
 	for (Productivity productivity : sorted) {
 		
 		Double salary1 = productivity.getProductivitySum();
-		String day = productivity.getProductivityDate().toString();
-		surveyMap.put(day,salary1);
+		surveyMap.put(productivity.getProductivityDate(),salary1);
 		
 	}
 	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
