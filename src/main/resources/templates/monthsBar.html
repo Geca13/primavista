@@ -17,13 +17,6 @@
 		<div id="container"
 			style="width: 1250px; height: 700px; margin: 0 auto"></div>
 	</div>
-	<hr>
-	<div class="container2">
-		<h2 align="center"></h2>
-
-		<div id="container2"
-			style="width: 1250px; height: 700px; margin: 0 auto"></div>
-	</div>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
@@ -41,55 +34,11 @@
         	text: [[${fullName}]]
         },
         subtitle: {
-            text: 'This Month Productivity'
-        },
-        xAxis: {
-        	
-            categories: [[${surveyMap.keySet()}]],
-            crosshair: true
-        },
-        yAxis: {
-            min: 0,
-            max:1000,
-            title: {
-                text: 'MKD'
-            }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} MKD</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
-        },
-        series: [{
-            name: 'Denars by Day',
-            data: [[${surveyMap.values()}]] 
-        }]
-    });
-    });
-</script>
-
-<script th:inline="javascript">
-$(function(){
-    Highcharts.chart('container2', {
-        chart: {
-            type: 'column'
-        },
-        
-        subtitle: {
             text: 'Salaries by month'
         },
         xAxis: {
         	
-            categories: [[${surveyMap2.keySet()}]],
+            categories: [[${surveyMap.keySet()}]],
             crosshair: true
         },
         yAxis: {
@@ -115,7 +64,7 @@ $(function(){
         },
         series: [{
             name: 'Salary by Month',
-            data: [[${surveyMap2.values()}]] 
+            data: [[${surveyMap.values()}]] 
         }]
     });
     });

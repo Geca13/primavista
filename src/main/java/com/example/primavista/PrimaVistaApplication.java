@@ -7,14 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
 import com.example.primavista.production.entity.Operation;
 import com.example.primavista.production.repository.OperationRepository;
 
 
 
-@SuppressWarnings("deprecation")
+
 @SpringBootApplication
 public class PrimaVistaApplication implements WebMvcConfigurer {
 	

@@ -7,9 +7,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.convert.JodaTimeConverters.LocalDateTimeToDateConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -89,21 +87,44 @@ public class ProductivityController {
 	List<Productivity> sorted = salary.getProductivities();
 	sorted.sort(Comparator.comparing(Productivity::getProductivityDate));
 	Map< LocalDate,Double> surveyMap = new LinkedHashMap<>();
-	
 	for (Productivity productivity : sorted) {
 		
-		Double salary1 = productivity.getProductivitySum();
-		surveyMap.put(productivity.getProductivityDate(),salary1);
-		
+		if (surveyMap.containsKey(productivity.getProductivityDate())) {
+			surveyMap.put(productivity.getProductivityDate(),surveyMap.get(productivity.getProductivityDate())+productivity.getProductivitySum());
+		}else {
+		surveyMap.put(productivity.getProductivityDate(),productivity.getProductivitySum());
+		}
 	}
 	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
 	model.addAttribute("surveyMap", surveyMap);
 	model.addAttribute("fullName", fullName);
+	model.addAttribute("total", salary.getSalary());
+	
+	List<Salary> salaries = salaryRepository.findByEmployeeOrderByMonthDesc(employeeRepository.findById(id).get());
+	salaries.sort(Comparator.comparing(Salary::getMonth));
+	Map< Month,Double> surveyMap2 = new LinkedHashMap<>();
+	for (Salary salary3 : salaries) {
+		surveyMap2.put(salary3.getMonth(), salary3.getSalary());
+	}
+	model.addAttribute("surveyMap2", surveyMap2);
+
 		return "bars";
-		
 	}
 	
-	
-	
+	@GetMapping("/allSalariesByEmployee/{id}")
+	public String returnAllSalariesByEmployee(Model model,@PathVariable("id") Integer id) {
+		
+		List<Salary> salaries = salaryRepository.findByEmployeeOrderByMonthDesc(employeeRepository.findById(id).get());
+		salaries.sort(Comparator.comparing(Salary::getMonth));
+		Map< Month,Double> surveyMap2 = new LinkedHashMap<>();
+		for (Salary salary : salaries) {
+			surveyMap2.put(salary.getMonth(), salary.getSalary());
+		}
+		String fullName = employeeRepository.findById(id).get().getLastName() + " " + employeeRepository.findById(id).get().getFirstName();
+		model.addAttribute("surveyMap2", surveyMap2);
+		model.addAttribute("fullName", fullName);
+		return "monthsBar";
+		
+	}
 	
 }
