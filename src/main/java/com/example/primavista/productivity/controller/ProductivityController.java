@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,12 +90,13 @@ public class ProductivityController {
 	List<Productivity> sorted = salary.getProductivities();
 	sorted.sort(Comparator.comparing(Productivity::getProductivityDate));
 	Map< LocalDate,Double> surveyMap = new LinkedHashMap<>();
-	
 	for (Productivity productivity : sorted) {
 		
-		Double salary1 = productivity.getProductivitySum();
-		surveyMap.put(productivity.getProductivityDate(),salary1);
-		
+		if (surveyMap.containsKey(productivity.getProductivityDate())) {
+			surveyMap.put(productivity.getProductivityDate(),surveyMap.get(productivity.getProductivityDate())+productivity.getProductivitySum());
+		}else {
+		surveyMap.put(productivity.getProductivityDate(),productivity.getProductivitySum());
+		}
 	}
 	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
 	model.addAttribute("surveyMap", surveyMap);
