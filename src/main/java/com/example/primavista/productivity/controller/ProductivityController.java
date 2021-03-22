@@ -98,6 +98,8 @@ public class ProductivityController {
 		surveyMap.put(productivity.getProductivityDate(),productivity.getProductivitySum());
 		}
 	}
+	
+	
 	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
 	model.addAttribute("surveyMap", surveyMap);
 	model.addAttribute("fullName", fullName);
