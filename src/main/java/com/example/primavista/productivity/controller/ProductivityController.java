@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +96,8 @@ public class ProductivityController {
 		surveyMap.put(productivity.getProductivityDate(),productivity.getProductivitySum());
 		}
 	}
+	
+	
 	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
 	model.addAttribute("surveyMap", surveyMap);
 	model.addAttribute("fullName", fullName);
