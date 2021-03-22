@@ -1,8 +1,15 @@
 package com.example.primavista.productivity.controller;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.convert.JodaTimeConverters.LocalDateTimeToDateConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -16,8 +23,10 @@ import com.example.primavista.production.repository.LotRepository;
 import com.example.primavista.production.repository.ProductOperationsRepository;
 import com.example.primavista.production.repository.ProductRepository;
 import com.example.primavista.productivity.entity.Productivity;
+import com.example.primavista.productivity.entity.Salary;
 import com.example.primavista.productivity.repository.EmployeeRepository;
 import com.example.primavista.productivity.repository.ProductivityRepository;
+import com.example.primavista.productivity.repository.SalaryRepository;
 import com.example.primavista.productivity.services.ProductivityServices;
 
 @Controller
@@ -40,6 +49,9 @@ public class ProductivityController {
 	
 	@Autowired
 	LotRepository lotRepository;
+	
+	@Autowired
+	SalaryRepository salaryRepository;
 	
 	@GetMapping("/addNewProductivity/{id}/{oid}")
 	@Transactional
@@ -68,6 +80,28 @@ public class ProductivityController {
 		prodServices.saveNewProductivity(id,oid, productivity);
 		
 		return "redirect:/productOperationsValues/"+id;
+	}
+	
+	@GetMapping("/thisMonthSalary/{id}")
+	public String getThisMonthSalaryByEmployee(Model model ,@PathVariable("id") Integer id) {
+		
+	Salary salary = salaryRepository.findByEmployeeAndMonthAndYear(employeeRepository.findById(id).get(), LocalDate.now().getMonth(),LocalDate.now().getYear());
+	List<Productivity> sorted = salary.getProductivities();
+	sorted.sort(Comparator.comparing(Productivity::getProductivityDate));
+	Map< String,Double> surveyMap = new LinkedHashMap<>();
+	
+	for (Productivity productivity : sorted) {
+		
+		Double salary1 = productivity.getProductivitySum();
+		String day = productivity.getProductivityDate().toString();
+		surveyMap.put(day,salary1);
+		
+	}
+	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
+	model.addAttribute("surveyMap", surveyMap);
+	model.addAttribute("fullName", fullName);
+		return "bars";
+		
 	}
 	
 	
