@@ -89,7 +89,6 @@ public class ProductivityController {
 	sorted.sort(Comparator.comparing(Productivity::getProductivityDate));
 	Map< LocalDate,Double> surveyMap = new LinkedHashMap<>();
 	for (Productivity productivity : sorted) {
-		
 		if (surveyMap.containsKey(productivity.getProductivityDate())) {
 			surveyMap.put(productivity.getProductivityDate(),surveyMap.get(productivity.getProductivityDate())+productivity.getProductivitySum());
 		}else {
@@ -97,11 +96,25 @@ public class ProductivityController {
 		}
 	}
 	
+	Salary previousSalary = salaryRepository.findByEmployeeAndMonthAndYear(employeeRepository.findById(id).get(), LocalDate.now().getMonth().minus(1),LocalDate.now().getYear());
+	List<Productivity> previousSorted = previousSalary.getProductivities();
+	previousSorted.sort(Comparator.comparing(Productivity::getProductivityDate));
+	Map< LocalDate,Double> surveyMap3 = new LinkedHashMap<>();
+	for (Productivity productivity : previousSorted) {
+		if (surveyMap3.containsKey(productivity.getProductivityDate())) {
+			surveyMap3.put(productivity.getProductivityDate(),surveyMap3.get(productivity.getProductivityDate())+productivity.getProductivitySum());
+		}else {
+		surveyMap3.put(productivity.getProductivityDate(),productivity.getProductivitySum());
+		}
+	}
 	
-	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
-	model.addAttribute("surveyMap", surveyMap);
-	model.addAttribute("fullName", fullName);
-	model.addAttribute("total", salary.getSalary());
+	List<Salary> threeSalaries = salaryRepository.findByEmployeeAndMonthBetweenOrderByMonthAsc(employeeRepository.findById(id).get(), LocalDate.now().getMonth().minus(4), LocalDate.now().getMonth().minus(1));
+	
+	Map< Month,Double> surveyMap4 = new LinkedHashMap<>();
+	for (Salary salary3 : threeSalaries) {
+		surveyMap4.put(salary3.getMonth(), salary3.getSalary());
+	}
+	
 	
 	List<Salary> salaries = salaryRepository.findByEmployeeOrderByMonthDesc(employeeRepository.findById(id).get());
 	salaries.sort(Comparator.comparing(Salary::getMonth));
@@ -109,8 +122,13 @@ public class ProductivityController {
 	for (Salary salary3 : salaries) {
 		surveyMap2.put(salary3.getMonth(), salary3.getSalary());
 	}
+	
+	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
+	model.addAttribute("fullName", fullName);
+	model.addAttribute("surveyMap", surveyMap);
 	model.addAttribute("surveyMap2", surveyMap2);
-
+	model.addAttribute("surveyMap3", surveyMap3);
+	model.addAttribute("surveyMap4", surveyMap4);
 		return "bars";
 	}
 	
