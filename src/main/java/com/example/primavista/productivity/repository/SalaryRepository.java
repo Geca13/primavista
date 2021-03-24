@@ -18,7 +18,7 @@ public interface SalaryRepository extends JpaRepository<Salary, Integer>{
 	
 	List<Salary>findByEmployeeOrderByMonthDesc(Employee employee);
 	
-	List<Salary> findByEmployeeAndMonthBetweenOrderByMonthAsc(Employee employee,Month start,Month end);
+	List<Salary> findByEmployeeAndMonthBetween(Employee employee,Month start,Month end);
 
 	
 }

@@ -87,48 +87,48 @@ public class ProductivityController {
 	Salary salary = salaryRepository.findByEmployeeAndMonthAndYear(employeeRepository.findById(id).get(), LocalDate.now().getMonth(),LocalDate.now().getYear());
 	List<Productivity> sorted = salary.getProductivities();
 	sorted.sort(Comparator.comparing(Productivity::getProductivityDate));
-	Map< LocalDate,Double> surveyMap = new LinkedHashMap<>();
+	Map< LocalDate,Double> table1 = new LinkedHashMap<>();
 	for (Productivity productivity : sorted) {
-		if (surveyMap.containsKey(productivity.getProductivityDate())) {
-			surveyMap.put(productivity.getProductivityDate(),surveyMap.get(productivity.getProductivityDate())+productivity.getProductivitySum());
+		if (table1.containsKey(productivity.getProductivityDate())) {
+			table1.put(productivity.getProductivityDate(),table1.get(productivity.getProductivityDate())+productivity.getProductivitySum());
 		}else {
-		surveyMap.put(productivity.getProductivityDate(),productivity.getProductivitySum());
+			table1.put(productivity.getProductivityDate(),productivity.getProductivitySum());
 		}
 	}
 	
 	Salary previousSalary = salaryRepository.findByEmployeeAndMonthAndYear(employeeRepository.findById(id).get(), LocalDate.now().getMonth().minus(1),LocalDate.now().getYear());
 	List<Productivity> previousSorted = previousSalary.getProductivities();
 	previousSorted.sort(Comparator.comparing(Productivity::getProductivityDate));
-	Map< LocalDate,Double> surveyMap3 = new LinkedHashMap<>();
+	Map< LocalDate,Double> table2 = new LinkedHashMap<>();
 	for (Productivity productivity : previousSorted) {
-		if (surveyMap3.containsKey(productivity.getProductivityDate())) {
-			surveyMap3.put(productivity.getProductivityDate(),surveyMap3.get(productivity.getProductivityDate())+productivity.getProductivitySum());
+		if (table2.containsKey(productivity.getProductivityDate())) {
+			table2.put(productivity.getProductivityDate(),table2.get(productivity.getProductivityDate())+productivity.getProductivitySum());
 		}else {
-		surveyMap3.put(productivity.getProductivityDate(),productivity.getProductivitySum());
+			table2.put(productivity.getProductivityDate(),productivity.getProductivitySum());
 		}
 	}
 	
-	List<Salary> threeSalaries = salaryRepository.findByEmployeeAndMonthBetweenOrderByMonthAsc(employeeRepository.findById(id).get(), LocalDate.now().getMonth().minus(4), LocalDate.now().getMonth().minus(1));
+	List<Salary> threeSalaries = salaryRepository.findByEmployeeAndMonthBetween(employeeRepository.findById(id).get(), LocalDate.now().getMonth().minus(3), LocalDate.now().getMonth().minus(2));
 	
-	Map< Month,Double> surveyMap4 = new LinkedHashMap<>();
+	Map< Month,Double> table3 = new LinkedHashMap<>();
 	for (Salary salary3 : threeSalaries) {
-		surveyMap4.put(salary3.getMonth(), salary3.getSalary());
+		table3.put(salary3.getMonth(), salary3.getSalary());
 	}
 	
 	
 	List<Salary> salaries = salaryRepository.findByEmployeeOrderByMonthDesc(employeeRepository.findById(id).get());
 	salaries.sort(Comparator.comparing(Salary::getMonth));
-	Map< Month,Double> surveyMap2 = new LinkedHashMap<>();
+	Map< Month,Double> table4 = new LinkedHashMap<>();
 	for (Salary salary3 : salaries) {
-		surveyMap2.put(salary3.getMonth(), salary3.getSalary());
+		table4.put(salary3.getMonth(), salary3.getSalary());
 	}
 	
 	String fullName = salary.getEmployee().getLastName() + " " + salary.getEmployee().getFirstName();
 	model.addAttribute("fullName", fullName);
-	model.addAttribute("surveyMap", surveyMap);
-	model.addAttribute("surveyMap2", surveyMap2);
-	model.addAttribute("surveyMap3", surveyMap3);
-	model.addAttribute("surveyMap4", surveyMap4);
+	model.addAttribute("table1", table1);
+	model.addAttribute("table2", table2);
+	model.addAttribute("table3", table3);
+	model.addAttribute("table4", table4);
 		return "bars";
 	}
 	
