@@ -56,14 +56,12 @@ public class ProductivityServices {
 		return employeeRepository.findAll(pageable);
 	}
      
-     public Page<Productivity> findProductivity(Integer id, Integer pageNumber, Integer pageSize,LocalDate date){
+     public List<Productivity> findProductivity(Integer id, String date){
     	 
-    	 Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-    	 if(date != null) {
-    		 return productivityRepository.findByEmployeeIdAndProductivityDate(id, date, pageable);
+    	 LocalDate lastDate = productivityRepository.findAllByEmployeeIdOrderByProductivityDateDesc(id).get(0).getProductivityDate();
+    	 
+    return productivityRepository.findAllByEmployeeIdAndProductivityDate(id, lastDate);
     		 }
-    	 return productivityRepository.findAllByEmployeeIdOrderByProductivityDateDesc(id, pageable);
-     }
      
      
      public Productivity saveNewProductivity(Integer id,Integer oid,Productivity productivity) {

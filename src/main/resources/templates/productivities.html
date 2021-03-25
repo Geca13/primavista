@@ -122,42 +122,7 @@
    </tbody>
 </table>
 </form>
- <div th:if = "${totalPages > 1}">
  
-    <div class = "row col-sm-10">
-     <div class = "row col-sm-2">
-     Total Rows: [[${totalItems}]]
-     </div>
-     
-     <div class = "row col-sm-2">
-        <a th:if="${currentPage > 1}" th:href="@{'/page/' + ${currentPage - 1}+  ${date != null ? '&date=' + date : ' ' }}">Previous</a>
-<span th:unless="${currentPage > 1}">Previous</span>
-</div>
-     <div class = "row col-sm-2">
-        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-           <a th:if="${currentPage != i}" th:href = "@{'/page/' + ${i} + ${date != null ? '&date=' + date : ' ' }}">[[${i}]]</a>
-           <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-        </span>
-     
-     </div>
-     
-     <div class = "row col-sm-2">
-     
-     <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+   ${date != null ? '&date=' + date : ' ' }}">Next</a>
-         <span th:unless="${currentPage < totalPages}">Next</span> &nbsp; &nbsp;
-     </div>
-     
-     
-    
-    <div class = "row col-sm-2">
-     
-     <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+  ${date != null ? '&date=' + date : ' ' }}">Last</a>
-         <span th:unless="${currentPage < totalPages}">Last</span> &nbsp; &nbsp;
-     </div>
-    
-    </div>
- 
- </div >
   
   
   </div>

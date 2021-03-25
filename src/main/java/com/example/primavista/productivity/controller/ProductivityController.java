@@ -154,32 +154,16 @@ public class ProductivityController {
 	}
 	
 	@GetMapping("/productivity/{id}")
-	public String viewProductivityPage(Model model,@PathVariable("id") Integer id,@Param("date")LocalDate date) {
-		
-		findProductivityByEmployee(id, 1, model, date);
+	public String viewProductivityPage(Model model,@PathVariable("id") Integer id,@Param("date")String date) {
+   	 LocalDate lastDate = productivityRepository.findAllByEmployeeIdOrderByProductivityDateDesc(id).get(0).getProductivityDate();
+
+		model.addAttribute("employee", employeeRepository.findById(id).get());
+		model.addAttribute("productivityList", productivityRepository.findAllByEmployeeIdAndProductivityDate(id, lastDate));
+		prodServices.findProductivity(id, date);
 		 
 		     return "productivities";
 	}
 	
-	@GetMapping("/page/{pageNumber}")
-	public String findProductivityByEmployee(@PathVariable("id") Integer id,@PathVariable("pageNumber") Integer pageNumber,
-			Model model,
-			@Param("date")LocalDate date) {
-		
-		Integer pageSize = 2;
-		
-		Page<Productivity> pages = prodServices.findProductivity(id, pageNumber, pageSize, date);
-		
-		List<Productivity> productivityList = pages.getContent();
-		
-		   model.addAttribute("currentPage",pageNumber);
-		   model.addAttribute("totalPages", pages.getTotalPages());
-		   model.addAttribute("totalItems", pages.getTotalElements());
-		   model.addAttribute("employee", employeeRepository.findById(id).get());
-		   model.addAttribute("date", date);
-		   model.addAttribute("productivityList", productivityList);
-		
-		     return "productivities";
-		}
+	
 	
 }
