@@ -56,6 +56,16 @@ public class ProductivityServices {
 		return employeeRepository.findAll(pageable);
 	}
      
+     public Page<Productivity> findProductivity(Integer id, Integer pageNumber, Integer pageSize,LocalDate date){
+    	 
+    	 Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+    	 if(date != null) {
+    		 return productivityRepository.findByEmployeeIdAndProductivityDate(id, date, pageable);
+    		 }
+    	 return productivityRepository.findAllByEmployeeIdOrderByProductivityDateDesc(id, pageable);
+     }
+     
+     
      public Productivity saveNewProductivity(Integer id,Integer oid,Productivity productivity) {
     	 Double sum = 0.00;
     	 Product product = productRepository.findById(id).get();

@@ -19,16 +19,19 @@
 
   
   <h1>Employees list</h1>
-  <form th:action="@{/employees}">
+  <form th:action="@{/productivity/{id}(id=${employee.id})}">
   
-  <input type="hidden" name="sortField" th:value="${sortField}" />
-  <input type="hidden" name="sortDir" th:value="${sortDir}" />
   
-  Filter: <input type="text" name="search" id="search" size="50"  required />
-    &nbsp;
+  
+  <div class="form-group"> <!-- Date input -->
+   
+        <label class="control-label" for="birthday">Start Date:</label>
+        <input  class="form-control" th:name="date" type="date" id="birthday" name="birthday" >
+        
+      </div>
     <input type="submit" value="Search" />
     &nbsp;
-     <a th:href="@{/employees}">Clear</a>
+     <a th:href="@{/productivity/{id}(id=${employee.id})}">Clear</a>
 
 <br> <br>
   
@@ -39,54 +42,82 @@
      Id
       </th>
       <th scope="col">
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=lastName&sortDir=' + ${reverseSortDir}}">Last Name</a> 
+      Product
       </th>
       <th scope="col">
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}">First Name</a>
+      Operation
        </th>
       
       
       <th scope="col">
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=emdr&sortDir=' + ${reverseSortDir}}">EMBR</a> 
+      Date
       </th>
       
       <th scope="col">
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=bankAccount&sortDir=' + ${reverseSortDir}}">Bank Account</a> 
-      </th>
+           Sum
+                 </th>
       
       <th scope="col"> 
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=phoneNumber&sortDir=' + ${reverseSortDir}}">Phone Number</a>
-       </th>
-       <th scope="col"> 
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=bday&sortDir=' + ${reverseSortDir}}">BirthDate</a>
-       </th>
-       <th scope="col"> 
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=employedFrom&sortDir=' + ${reverseSortDir}}">Employeed</a>
+      
        </th>
        
        <th scope="col"> 
-      
+      Lots
        </th>
+       
+       
       </tr>
   </thead>
   <tbody>
-    <tr th:each="employee : ${employees}">
-      <td th:text="${employee.id}"></td>
-      <td th:text="${employee.lastName}"></td>
-      <td th:text="${employee.firstName}"></td>
-      <td th:text="${employee.emdr}"></td>
-      <td th:text="${employee.bankAccount}"></td> 
-      <td th:text="${employee.phoneNumber}"></td>  
-      <td th:text="${#temporals.format(employee.bday, 'yyyy-MM-dd')}"></td> 
-      <td th:text="${#temporals.format(employee.employedFrom, 'yyyy-MM-dd')}"></td> 
+    <tr th:each="productivity : ${productivityList}">
+      <td th:text="${productivity.id}"></td>
+      <td th:text="${productivity.product.description}"></td>
+      <td th:text="${productivity.operation.operation.description}"></td>
+      <td th:text="${#temporals.format(productivity.productivityDate, 'yyyy-MM-dd')}"></td> 
+      <td th:text="${productivity.productivitySum}"></td>
+     
       <td>
         <a th:href="@{/updateEmployee/{id}(id=${employee.id})}" class="btn btn-outline-success">UPDATE</a>
         <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-outline-danger">DELETE</a>
-        <a th:href="@{/thisMonthSalary/{id}(id=${employee.id})}" class="btn btn-outline-success">PRODUCTIVITY</a>
-        <a th:href="@{/allSalariesByEmployee/{id}(id=${employee.id})}" class="btn btn-outline-success">Previous salaries</a>
-        <a th:href="@{/productivity/{id}(id=${employee.id})}" class="btn btn-outline-success">All Productivity</a>
-        
       <td>
+      
+      <td>
+      
+       <table class="table table-striped table-dark">
+  <thead>
+    <tr>
+      
+      <th scope="col"> Lot Id</th>
+      <th scope="col"> Qty</th>
+      <th scope="col"> Size</th>
+      <th scope="col"> Product</th>
+      <th scope="col"> Action</th>
+     
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="lot: ${productivity.lots}" >
+      <td th:text="${lot.lid}"></td> 
+      <td th:text="${lot.qty}"></td>
+      <td th:text="${lot.size}"></td>
+      <td th:text="${lot.product.description}"></td>
+      
+       <td>
+       <a th:href="@{/lotById/{id}(id=${lot?.id})}" class="btn btn-outline-danger">Update</a> 
+       <a th:href="@{/deleteLot/{id}(id=${lot?.id})}" class="btn btn-outline-danger">Delete</a>
+      </td>
+        
+     
+      
+   </table>
+      
+      
+      
+      </td>
+      
+      
+      
     </tr>
    </tbody>
 </table>
@@ -99,12 +130,12 @@
      </div>
      
      <div class = "row col-sm-2">
-        <a th:if="${currentPage > 1}" th:href="@{'/pages/' + ${currentPage - 1}+  '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${search != null ? '&search=' + search : ' ' }}">Previous</a>
+        <a th:if="${currentPage > 1}" th:href="@{'/page/' + ${currentPage - 1}+  ${date != null ? '&date=' + date : ' ' }}">Previous</a>
 <span th:unless="${currentPage > 1}">Previous</span>
 </div>
      <div class = "row col-sm-2">
         <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-           <a th:if="${currentPage != i}" th:href = "@{'/pages/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}+ ${search != null ? '&search=' + search : ' ' }}">[[${i}]]</a>
+           <a th:if="${currentPage != i}" th:href = "@{'/page/' + ${i} + ${date != null ? '&date=' + date : ' ' }}">[[${i}]]</a>
            <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
         </span>
      
@@ -112,7 +143,7 @@
      
      <div class = "row col-sm-2">
      
-     <a th:if="${currentPage < totalPages}" th:href="@{'/pages/' + ${currentPage + 1}+  '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${search != null ? '&search=' + search : ' ' }}">Next</a>
+     <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+   ${date != null ? '&date=' + date : ' ' }}">Next</a>
          <span th:unless="${currentPage < totalPages}">Next</span> &nbsp; &nbsp;
      </div>
      
@@ -120,7 +151,7 @@
     
     <div class = "row col-sm-2">
      
-     <a th:if="${currentPage < totalPages}" th:href="@{'/pages/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}+ ${search != null ? '&search=' + search : ' ' }}">Last</a>
+     <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+  ${date != null ? '&date=' + date : ' ' }}">Last</a>
          <span th:unless="${currentPage < totalPages}">Last</span> &nbsp; &nbsp;
      </div>
     

@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -16,11 +18,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.primavista.production.entity.Lot;
 import com.example.primavista.production.entity.ProductOpers;
 import com.example.primavista.production.repository.LotRepository;
 import com.example.primavista.production.repository.ProductOperationsRepository;
 import com.example.primavista.production.repository.ProductRepository;
+import com.example.primavista.productivity.entity.Employee;
 import com.example.primavista.productivity.entity.Productivity;
 import com.example.primavista.productivity.entity.Salary;
 import com.example.primavista.productivity.repository.EmployeeRepository;
@@ -147,5 +152,34 @@ public class ProductivityController {
 		return "monthsBar";
 		
 	}
+	
+	@GetMapping("/productivity/{id}")
+	public String viewProductivityPage(Model model,@PathVariable("id") Integer id,@Param("date")LocalDate date) {
+		
+		findProductivityByEmployee(id, 1, model, date);
+		 
+		     return "productivities";
+	}
+	
+	@GetMapping("/page/{pageNumber}")
+	public String findProductivityByEmployee(@PathVariable("id") Integer id,@PathVariable("pageNumber") Integer pageNumber,
+			Model model,
+			@Param("date")LocalDate date) {
+		
+		Integer pageSize = 2;
+		
+		Page<Productivity> pages = prodServices.findProductivity(id, pageNumber, pageSize, date);
+		
+		List<Productivity> productivityList = pages.getContent();
+		
+		   model.addAttribute("currentPage",pageNumber);
+		   model.addAttribute("totalPages", pages.getTotalPages());
+		   model.addAttribute("totalItems", pages.getTotalElements());
+		   model.addAttribute("employee", employeeRepository.findById(id).get());
+		   model.addAttribute("date", date);
+		   model.addAttribute("productivityList", productivityList);
+		
+		     return "productivities";
+		}
 	
 }
