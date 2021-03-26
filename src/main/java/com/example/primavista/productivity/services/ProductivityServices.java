@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.example.primavista.production.entity.Lot;
 import com.example.primavista.production.entity.Product;
 import com.example.primavista.production.entity.ProductOpers;
+import com.example.primavista.production.repository.LotRepository;
 import com.example.primavista.production.repository.ProductOperationsRepository;
 import com.example.primavista.production.repository.ProductRepository;
 import com.example.primavista.productivity.entity.Employee;
@@ -44,6 +45,9 @@ public class ProductivityServices {
 	
 	@Autowired
 	SalaryRepository salaryRepository;
+	
+	@Autowired
+	LotRepository lotRepository;
 	
      public Page<Employee> findPagina(Integer pageNumber, Integer pageSize, String sortField, String sortDirection,String search) {
 		
@@ -111,6 +115,35 @@ public class ProductivityServices {
     	 
      }
      
+     public void removeLotFromProductivity(Integer id,Integer lotId) {
+    	 
+    	 Productivity productivity = productivityRepository.findById(id).get();
+    	 Lot lot = lotRepository.findById(lotId).get();
+    	 productivity.getLots().remove(lot);
+    	 productivity.setProductivitySum(productivity.getProductivitySum()-(productivity.getOperation().getOperationValue()*lot.getQty()));
+    	 productivityRepository.save(productivity);
+    	 Salary salary = salaryRepository.findByMonth(productivity.getProductivityDate().getMonth());
+    	 salary.setSalary(salary.getSalary()-(productivity.getOperation().getOperationValue()*lot.getQty()));
+    	 salaryRepository.save(salary);
+		 if(productivity.getLots().isEmpty()) {
+			productivityRepository.delete(productivity);
+		 }
+		 
+	}
      
+     public void deleteProductivity(Integer id) {
+    	 
+    	 Productivity productivity = productivityRepository.findById(id).get();
+    	 Salary salary = salaryRepository.findByMonth(productivity.getProductivityDate().getMonth());
+    	 salary.getProductivities().remove(productivity);
+    	 salary.setSalary(salary.getSalary()-productivity.getProductivitySum());
+    	 salaryRepository.save(salary);
+         productivity.setLots(null);
+         productivity.setOperation(null);
+         productivityRepository.delete(productivity);
+    	 
+    	 
+     }
+   
 
 }

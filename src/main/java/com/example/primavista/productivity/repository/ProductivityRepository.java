@@ -14,6 +14,8 @@ public interface ProductivityRepository extends JpaRepository<Productivity, Inte
 	Boolean existsByEmployee(Employee employee);
 	
 	Productivity findByEmployee(Employee employee);
+	
+	Productivity findByOperationAndLots_Id(ProductOpers operation, Integer lot);
 
 	Boolean existsByOperationAndLots_Id(ProductOpers operation, Integer lot);
 	

@@ -121,7 +121,7 @@ public class ProductivityController {
 	}
 	
 	
-	List<Salary> salaries = salaryRepository.findByEmployeeOrderByMonthDesc(employeeRepository.findById(id).get());
+List<Salary> salaries = salaryRepository.findByEmployeeOrderByMonthDesc(employeeRepository.findById(id).get());
 	salaries.sort(Comparator.comparing(Salary::getMonth));
 	Map< Month,Double> table4 = new LinkedHashMap<>();
 	for (Salary salary3 : salaries) {
@@ -154,16 +154,33 @@ public class ProductivityController {
 	}
 	
 	@GetMapping("/productivity/{id}")
-	public String viewProductivityPage(Model model,@PathVariable("id") Integer id,@Param("date")String date) {
+	public String viewProductivityPage(Model model,@PathVariable("id") Integer id,@Param(value = "date")String date) {
    	 LocalDate lastDate = productivityRepository.findAllByEmployeeIdOrderByProductivityDateDesc(id).get(0).getProductivityDate();
-
-		model.addAttribute("employee", employeeRepository.findById(id).get());
+     Employee employee = employeeRepository.findById(id).get();
+		model.addAttribute("employee", employee);
 		model.addAttribute("productivityList", productivityRepository.findAllByEmployeeIdAndProductivityDate(id, lastDate));
-		prodServices.findProductivity(id, date);
-		 
-		     return "productivities";
+		if(date != null){
+			model.addAttribute("productivityList", productivityRepository.findAllByEmployeeIdAndProductivityDate(id, LocalDate.parse(date)));
+			return "productivities";
+		}
+		    return "productivities";
 	}
 	
+	@GetMapping("/removeProductivityLot/{id}/{lotId}")
+	public String removeLotFromProductivity(@PathVariable("id") Integer id,@PathVariable("lotId") Integer lotId) {
+		Employee employee = productivityRepository.findById(id).get().getEmployee();
+		prodServices.removeLotFromProductivity(id, lotId);
+		
+		return "redirect:/productivity/"+employee.getId();
+	}
+	
+	@GetMapping("/deleteProductivity/{id}")
+	public String deleteProductivity(@PathVariable("id") Integer id) {
+		Employee employee = productivityRepository.findById(id).get().getEmployee();
+		prodServices.deleteProductivity(id);
+		
+		return "redirect:/productivity/"+employee.getId();
+	}
 	
 	
 }

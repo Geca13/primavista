@@ -21,20 +21,36 @@
   <h1>Employees list</h1>
   <form th:action="@{/productivity/{id}(id=${employee.id})}">
   
+ <div class="row">
   
-  
-  <div class="form-group"> <!-- Date input -->
+  <div class="col">
+    
+    <div class="form-group"> <!-- Date input -->
    
         <label class="control-label" for="birthday">Start Date:</label>
         <input  class="form-control" th:name="date" type="date" id="birthday" name="birthday" >
         
       </div>
-    <input type="submit" value="Search" />
-    &nbsp;
-     <a th:href="@{/productivity/{id}(id=${employee.id})}">Clear</a>
-
-<br> <br>
-  
+    
+    </div>
+    <div class="col">
+    
+    
+    </div>
+    <div class="col">
+    
+    
+    </div>
+    
+    
+  </div>
+  <div class="col">
+    <div class="form-group">
+      <button style=margin-top:30px; type="submit" class="btn btn-success">Filter</button>
+      
+    </div>
+    
+  </div>
   <table class="table table-striped table-dark">
   <thead>
     <tr>
@@ -77,8 +93,7 @@
       <td th:text="${productivity.productivitySum}"></td>
      
       <td>
-        <a th:href="@{/updateEmployee/{id}(id=${employee.id})}" class="btn btn-outline-success">UPDATE</a>
-        <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-outline-danger">DELETE</a>
+        <a th:href="@{/deleteProductivity/{id}(id=${productivity.id})}" class="btn btn-outline-danger">DELETE</a>
       <td>
       
       <td>
@@ -104,13 +119,12 @@
       <td th:text="${lot.product.description}"></td>
       
        <td>
-       <a th:href="@{/lotById/{id}(id=${lot?.id})}" class="btn btn-outline-danger">Update</a> 
-       <a th:href="@{/deleteLot/{id}(id=${lot?.id})}" class="btn btn-outline-danger">Delete</a>
+       <a th:href="@{/removeProductivityLot/{id}/{lotId}(id=${productivity?.id}, lotId=${lot.id})}" class="btn btn-outline-danger">Remove</a>
       </td>
         
      
       
-   </table>
+  </table>
       
       
       
