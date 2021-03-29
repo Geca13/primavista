@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <div th:insert="/fragments/header :: head"></div>
+  <title>Unusual</title>
+</head>
+
+<body>
+
+  <div th:insert="/fragments/header :: header"></div>
+  
+  <div class="container">
+  <div class="row">
+    <div class="col-sm">
+    
+    <h1 class="display-5">Sign in</h1>
+    
+                  <!-- Modal body -->
+                <div class="modal-body">
+                   <form th:action="@{/login}" method="post">
+    
+    <div th:if="${param.error}">
+      <div class="alert alert-danger">Invalid username or
+       password.</div>
+     </div>
+     
+     <div th:if="${param.logout}">
+      <div class="alert alert-info">You have been logged out.</div>
+     </div>
+    
+    
+    
+    <div class="form-group">
+    <label for="username">* Email</label>
+    <input type="text" id="username" name="username" class="form-control"
+       autofocus="autofocus" placeholder="Username" />
+     </div>
+     
+     <div class="form-group">
+      <label for="password">Password</label> 
+      <input type="password" id="password" name="password" class="form-control"
+       placeholder="Password" />
+     </div>
+     <br>
+      <div class="form-group">
+      <div class="row">
+       <div class="col-sm-6 col-sm-offset-3">
+        <input type="submit" name="login-submit" id="login-submit"
+         class="form-control btn btn-secondary" value="Log In" />
+       </div>
+      </div>
+     </div>
+     
+     </form>
+                </div>
+                <div class="form-group">
+      <span>New user? <a href="/" th:href="@{/signUpForm}">Register
+        here</a></span>
+     </div>
+    </div>
+    <div class="col-sm">
+      <br>
+	<img alt="Logo" src="https://www.ellenmacarthurfoundation.org/assets/images/Deep-Dives/Fashion-MFC-logo-850px.png" style="height: 440px;width: 440px;">
+    </div>
+  </div>
+</div>
+  
+
+
+
+	<th:block th:insert="/fragments/header :: footer"></th:block>
+  <th:block th:insert="/fragments/header :: scripts"></th:block>
+</body>
+
+</html>
