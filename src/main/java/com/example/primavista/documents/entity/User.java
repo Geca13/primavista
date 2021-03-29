@@ -41,6 +41,7 @@ public class User implements Serializable {
 	
 	@Enumerated
 	private RoleName role;
+	
 	public User(String firstName, String lastName, String email, String password, RoleName role) {
 		super();
 		this.firstName = firstName;
