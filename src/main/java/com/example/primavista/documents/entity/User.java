@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -41,7 +42,6 @@ public class User implements Serializable {
 	public String email;
 	
 	public String password;
-	@OneToOne(cascade = CascadeType.ALL)
 	
 	@Enumerated
 	private RoleName role;

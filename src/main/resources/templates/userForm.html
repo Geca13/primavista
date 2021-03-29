@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div th:insert="/fragments/header :: head"></div>
+<title >Register</title>
+</head>
+
+<body>
+
+	<div th:insert="/fragments/header :: header"></div>
+	
+	<div class="container">
+	<div class="row">
+	<div class="col-sm-6">
+	<br>
+				<br>
+	<h1 class="display-3">Register User</h1>
+	<br>
+ <div th:if="${param.success}">
+     <div class="alert alert-info">You've successfully registered !!!&nbsp;&nbsp;&nbsp;<a class="btn btn-info" th:href="@{/login}">Sign in</a></div>
+     <br>
+    </div>
+     <div th:if="${param.error}">
+      <div class="alert alert-danger">Invalid Email.</div>
+     </div>
+		<div class="form-group">
+		<form th:action="@{/signUpForm}" th:object="${user}" class="form-horizontal" method="post" enctype="multipart/form-data">
+				
+				<div class="form-group-row">
+				<input type="text" th:field="*{firstName}" placeholder="First Name">
+				</div>
+				<div class="form-group-row">
+				<input type="text" th:field="*{lastName}" placeholder="Last Name">
+				</div>
+				<div class="form-group-row">
+				<input type="password" th:field="*{password}" placeholder="Password">
+				</div>
+				<div class="form-group-row">
+				<input type="email" th:field="*{email}" placeholder="Email">
+				</div>
+				
+			
+				<br>
+				<div class="form-group-row">
+						<button type="submit" class="btn btn-secondary col-2">Register</button>
+				</div>
+		</form>
+</div>
+</div>
+	<div class="col-sm-6">
+	<br>
+	<img alt="Logo" src="https://www.ellenmacarthurfoundation.org/assets/images/Deep-Dives/Fashion-MFC-logo-850px.png" style="height: 440px;width: 440px;">
+	
+	</div>
+
+</div>
+
+	</div>
+
+<th:block th:insert="/fragments/header :: scripts"></th:block>
+
+</body>
+
+</html>
